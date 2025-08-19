@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Result</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style/style.css">
+  <link rel="stylesheet" href="style/main.css">
+</head>
+<body>
+  <div id="result-container">
+    <h1>Your Result</h1>
+    <p>Your score: <span id="score">0</span></p>
+      <p id="message"></p>
+    <a href="index.html" class="btn-home">Home</a>
+  </div>
+<!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo-section">
+                    <img alt="JKT Logo" src="img/JKT-logo.jpg" />
+                    <h6 class="logo-text">
+                        <span class="subtitle">Organized by</span>
+                        <span class="title">JKT Digital Institute</span>
+                    </h6>
+                </div>
+                <div class="copyright-section">
+                    &copy; JKTechQuiz. All rights reserved
+                </div>
+                <div class="social-section">
+                    <a href="https://www.facebook.com/jktdigital" target="_blank">
+                        <i class="fa-brands fa-facebook"></i>
+                    </a>
+                    <a href="http://jktmyanmarint.com/index.html" target="_blank">
+                        <i class="fa-solid fa-globe"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+  <script>
+    window.onload = function () {
+      const result = JSON.parse(localStorage.getItem('quizResult'));
+      if (result) {
+        document.getElementById('score').textContent = `${result.score} / ${result.total}`;
+      } else {
+        document.getElementById('score').textContent = "No result found!";
+      }
+    };
+     window.onload = function () {
+    const result = JSON.parse(localStorage.getItem('quizResult'));
+    const scoreEl = document.getElementById('score');
+    const messageEl = document.getElementById('message');
+
+    if (result) {
+      scoreEl.textContent = `${result.score} / ${result.total}`;
+      if (result.score === result.total) {
+        messageEl.textContent = "🎉 Congratulations! You got it right!";
+        messageEl.style.color = "green";
+      } else {
+        messageEl.textContent = "😢 Sorry! Better luck next time!";
+        messageEl.style.color = "red";
+      }
+    } else {
+      scoreEl.textContent = "No result found!";
+      messageEl.textContent = "";
+    }
+  };
+  </script>
+</body>
+</html>

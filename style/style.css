@@ -1,0 +1,31 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #fefefe;
+  text-align: center;
+  padding: 40px;
+}
+
+#quiz-container, #result-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+button, .btn-home {
+  padding: 10px 20px;
+  margin-top: 20px;
+  background: #FA812F;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+button:hover, .btn-home:hover {
+  background-color: #d5691e;
+}

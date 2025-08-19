@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../../xampp/htdocs/PHPWorkSpace/jktechquiz.com"
+		},
+		{
+			"path": "../../../xampp/htdocs/PHPWorkSpace/jktechquiz.com/IPQuiz/IPQuiz2021/April"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "QuizWeb"
+	}
+}

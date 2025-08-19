@@ -1,0 +1,15 @@
+.card-content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+     background-color: #FEF3E2; 
+}
+
+.card-content img {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+

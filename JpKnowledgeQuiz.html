@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Flip Card Quiz with Timer</title>
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+			body {
+				font-family: Arial, sans-serif;
+				background: #f0f0f0;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				min-height: 100vh;
+				margin: 0;
+			}
+
+			h1 {
+				margin-bottom: 20px;
+			}
+
+			.card {
+				width: 400px;
+				height: 250px;
+				perspective: 1000px;
+			}
+
+			.card-inner {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				transition: transform 0.8s;
+				transform-style: preserve-3d;
+			}
+
+			.card.flipped .card-inner {
+				transform: rotateY(180deg);
+			}
+
+			.card-face {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				padding: 20px;
+				border-radius: 12px;
+				backface-visibility: hidden;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				font-size: 1.3rem;
+				text-align: center;
+			}
+
+			.card-front {
+				background: white;
+				font-weight: bold;
+				color: #333;
+			}
+			.card-back {
+				background: #ff771d;
+				color: white;
+				transform: rotateY(180deg);
+			}
+
+			.flip-btn {
+				margin-top: 20px;
+				padding: 10px 20px;
+				font-size: 1rem;
+				border: none;
+				border-radius: 8px;
+				background: #007bff;
+				color: white;
+				cursor: pointer;
+				transition: background 0.3s;
+			}
+
+			.flip-btn:hover {
+				background: #0056b3;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="card" id="quiz-card">
+			<div class="card-inner">
+				<div class="card-face card-front" id="card-front">
+					<div id="question-text">❓ Question</div>
+					<div id="timer" style="margin-top: 20px; font-size: 1.5rem">30</div>
+				</div>
+				<div class="card-face card-back" id="card-back">✅ Answer</div>
+			</div>
+		</div>
+
+		<button class="flip-btn" id="flip-btn">Show Answer</button>
+		<a href="#" id="next-btn">Next Question</a>
+
+		<script>
+			const questions = [
+				{
+					question: "Japan မှာကျင်းပတဲ့ 'Hanami' ဆိုတာဘာလဲ?",
+					answer: "ချယ်ရီပန်းကြည့်ပွဲ",
+				},
+				{ question: "ဂျပန်နိုင်ငံရဲ့ငွေစနစ်ကဘာလဲ?", answer: "Yen" },
+				{ question: "ဂျပန်နိုင်ငံရဲ့မြို့တော်ကဘယ်မြို့လဲ?", answer: "Tokyo" },
+			];
+
+			const card = document.getElementById("quiz-card");
+			const questionText = document.getElementById("question-text");
+			const cardBack = document.getElementById("card-back");
+			const flipBtn = document.getElementById("flip-btn");
+			const timerEl = document.getElementById("timer");
+			const nextBtn = document.getElementById("next-btn");
+
+			// pick random question
+			const randomQ = questions[Math.floor(Math.random() * questions.length)];
+			questionText.textContent = "❓ " + randomQ.question;
+			cardBack.textContent = "✅ " + randomQ.answer;
+
+			// Timer
+			let timeLeft = 30;
+			let timer = setInterval(() => {
+				timeLeft--;
+				if (timeLeft > 0) {
+					timerEl.textContent = timeLeft;
+				} else {
+					clearInterval(timer);
+					timerEl.textContent = "Time's Up!";
+				}
+			}, 1000);
+
+			// Flip only when button clicked
+			flipBtn.addEventListener("click", () => {
+				card.classList.toggle("flipped");
+				flipBtn.textContent = card.classList.contains("flipped")
+					? "Show Question"
+					: "Show Answer";
+
+				// Stop timer immediately when showing answer
+				clearInterval(timer);
+
+				// If timer not already "Time's Up!", show the remaining time
+				if (timeLeft > 0) {
+					timerEl.textContent = "Stopped at: " + timeLeft;
+				}
+			});
+		</script>
+	</body>
+</html>
