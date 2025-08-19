@@ -1,151 +1,740 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Flip Card Quiz with Timer</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Japanese Quiz with Furigana</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+		/>
 		<style>
 			* {
 				box-sizing: border-box;
-			}
-			body {
-				font-family: Arial, sans-serif;
-				background: #f0f0f0;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				flex-direction: column;
-				min-height: 100vh;
 				margin: 0;
+				padding: 0;
+			}
+
+			body {
+				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+				background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+				min-height: 100vh;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 20px;
+				color: #333;
+			}
+
+			header {
+				text-align: center;
+				margin-bottom: 30px;
+				width: 100%;
 			}
 
 			h1 {
+				color: #b32b2b;
+				font-size: 2.5rem;
+				margin-bottom: 10px;
+				text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+			}
+
+			.subtitle {
+				color: #2b4b8f;
+				font-size: 1.2rem;
+				max-width: 600px;
+				margin: 0 auto;
+			}
+
+			.progress-container {
+				width: 100%;
+				max-width: 800px;
+				background: white;
+				padding: 15px;
+				border-radius: 10px;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 				margin-bottom: 20px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.progress-text {
+				font-size: 1.2rem;
+				margin-bottom: 10px;
+				color: #2b4b8f;
+				text-align: center;
+			}
+
+			.progress-bar {
+				width: 100%;
+				height: 20px;
+				background: #e0e0e0;
+				border-radius: 10px;
+				overflow: hidden;
+			}
+
+			.progress {
+				height: 100%;
+				background: linear-gradient(to right, #4caf50, #2b8f2b);
+				width: 0%;
+				transition: width 0.5s ease;
+			}
+
+			.quiz-container {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
+				gap: 25px;
+				max-width: 1200px;
+				margin: 0 auto;
 			}
 
 			.card {
-				width: 400px;
-				height: 250px;
+				width: 350px;
+				height: 490px;
 				perspective: 1000px;
+				cursor: pointer;
+				position: relative;
+			}
+
+			.card-inactive {
+				opacity: 0.6;
+				cursor: not-allowed;
 			}
 
 			.card-inner {
 				position: relative;
 				width: 100%;
 				height: 100%;
+				text-align: center;
 				transition: transform 0.8s;
 				transform-style: preserve-3d;
+				box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19),
+					0 6px 6px rgba(0, 0, 0, 0.23);
+				border-radius: 15px;
 			}
 
 			.card.flipped .card-inner {
 				transform: rotateY(180deg);
 			}
 
-			.card-face {
+			.card-front,
+			.card-back {
 				position: absolute;
 				width: 100%;
 				height: 100%;
-				padding: 20px;
-				border-radius: 12px;
+				-webkit-backface-visibility: hidden;
 				backface-visibility: hidden;
+				border-radius: 15px;
+				padding: 30px;
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
-				font-size: 1.3rem;
-				text-align: center;
 			}
 
 			.card-front {
-				background: white;
-				font-weight: bold;
-				color: #333;
+				background: linear-gradient(135deg, #ffb22c, #ff771d);
+				color: white;
 			}
+
 			.card-back {
-				background: #ff771d;
+				background: linear-gradient(135deg, #38ef7d, #11998e);
 				color: white;
 				transform: rotateY(180deg);
 			}
 
-			.flip-btn {
-				margin-top: 20px;
-				padding: 10px 20px;
-				font-size: 1rem;
-				border: none;
-				border-radius: 8px;
-				background: #007bff;
-				color: white;
-				cursor: pointer;
-				transition: background 0.3s;
+			.question-number {
+				position: absolute;
+				top: 15px;
+				left: 15px;
+				background: rgba(255, 255, 255, 0.2);
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				font-size: 1.2rem;
 			}
 
-			.flip-btn:hover {
-				background: #0056b3;
+			.question-text {
+				font-size: 1.4rem;
+				margin-bottom: 20px;
+				text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+				text-align: center;
+				line-height: 1.6;
+			}
+
+			.hint {
+				font-style: italic;
+				margin-top: 20px;
+				font-size: 0.9rem;
+				opacity: 0.8;
+			}
+
+			.answer-text {
+				font-size: 1.8rem;
+				font-weight: bold;
+				margin-bottom: 20px;
+				text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+				text-align: center;
+			}
+
+			.flip-instruction {
+				position: absolute;
+				bottom: 15px;
+				width: 100%;
+				text-align: center;
+				font-size: 0.9rem;
+				opacity: 0.8;
+			}
+
+			.timer {
+				position: absolute;
+				top: 15px;
+				right: 15px;
+				background: rgba(0, 0, 0, 0.3);
+				color: white;
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: bold;
+				font-size: 1.4rem;
+				border: 2px solid white;
+			}
+
+			.timer.warning {
+				color: #ffcc00;
+				animation: pulse 1s infinite;
+			}
+
+			.timer.danger {
+				color: #ff4d4d;
+				animation: pulse 0.5s infinite;
+			}
+
+			.timer.time-up {
+				background: rgba(179, 43, 43, 0.8);
+				color: white;
+			}
+
+			@keyframes pulse {
+				0% {
+					transform: scale(1);
+				}
+				50% {
+					transform: scale(1.1);
+				}
+				100% {
+					transform: scale(1);
+				}
+			}
+
+			.next-button-container {
+				margin-top: 20px;
+				text-align: center;
+				display: none;
+			}
+
+			#next-button {
+				background: linear-gradient(45deg, #2b4b8f, #4a72cf);
+				color: white;
+				border: none;
+				padding: 12px 25px;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 1.1rem;
+				transition: 0.3s;
+			}
+
+			#next-button:hover {
+				background: linear-gradient(45deg, #3d5fb8, #3d5fb8);
+				transform: scale(1.05);
+			}
+
+			.celebrate {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				background: rgba(0, 0, 0, 0.8);
+				z-index: 100;
+				color: white;
+				font-size: 3rem;
+				flex-direction: column;
+				display: none;
+			}
+
+			.timeup-message {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: rgba(0, 0, 0, 0.8);
+				color: white;
+				padding: 20px;
+				border-radius: 10px;
+				text-align: center;
+				z-index: 10;
+			}
+
+			.btn-container {
+				display: flex;
+				column-gap: 2rem;
+				margin-top: 20px;
+			}
+
+			.japan-btn {
+				color: white;
+				border: none;
+				padding: 11px 25px;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 1.1rem;
+				text-decoration: none;
+				border: 1px solid #fa812f;
+				background-color: #fa812f;
+				transition: 0.3s;
+				margin-top: 18px;
+			}
+			.japan-btn:hover{
+				background-color: #d85e0c;
+				transform: scale(1.05);
+			}
+
+			/* Furigana styling */
+			ruby {
+				ruby-position: over;
+			}
+
+			rt {
+				font-size: 0.6em;
+				opacity: 0.9;
+			}
+
+			.japanese-text {
+				font-size: 1.3rem;
+				line-height: 1.8;
+				margin-bottom: 15px;
+			}
+
+			@media (max-width: 768px) {
+				.quiz-container {
+					flex-direction: column;
+					align-items: center;
+				}
+
+				.card {
+					width: 320px;
+					height: 380px;
+				}
+
+				.question-text {
+					font-size: 1.2rem;
+				}
+
+				.japanese-text {
+					font-size: 1.1rem;
+				}
 			}
 		</style>
 	</head>
 	<body>
-		<div class="card" id="quiz-card">
-			<div class="card-inner">
-				<div class="card-face card-front" id="card-front">
-					<div id="question-text">❓ Question</div>
-					<div id="timer" style="margin-top: 20px; font-size: 1.5rem">30</div>
-				</div>
-				<div class="card-face card-back" id="card-back">✅ Answer</div>
+		<header>
+			<h1>日本語クイズ</h1>
+			<p class="subtitle">
+				Test your knowledge of Japanese vocabulary. Click on each card to reveal
+				the answer!
+			</p>
+			<p class="subtitle">
+				Each question has a 30-second timer. Answer before time runs out!
+			</p>
+		</header>
+
+		<div class="progress-container">
+			<div class="progress-text">
+				Progress: <span id="current-question">1</span>/<span
+					id="total-questions"
+					>3</span
+				>
+			</div>
+			<div class="progress-bar">
+				<div class="progress" id="progress-bar"></div>
 			</div>
 		</div>
 
-		<button class="flip-btn" id="flip-btn">Show Answer</button>
-		<a href="#" id="next-btn">Next Question</a>
+		<div class="quiz-container" id="quiz-container">
+			<!-- Cards will be generated by JavaScript -->
+		</div>
+
+		<div class="btn-container">
+			<a href="JpKnowledge.html" class="japan-btn">Go to Japan Quiz</a>
+			<div class="next-button-container" id="next-button-container">
+				<button id="next-button">Next Question →</button>
+			</div>
+		</div>
+
+		<div class="celebrate" id="celebrate">
+			<div>🎉 Congratulations! 🎉</div>
+			<div>You completed all 3 questions!</div>
+			<a href="JpKnowledge.html" class="japan-btn">Go to Japan Quiz</a>
+		</div>
 
 		<script>
-			const questions = [
+			// Japan quiz questions and answers
+			const allQuestions = [
 				{
-					question: "Japan မှာကျင်းပတဲ့ 'Hanami' ဆိုတာဘာလဲ?",
-					answer: "ချယ်ရီပန်းကြည့်ပွဲ",
+					question:
+						"<ruby>物<rt>もの</rt></ruby>です。<ruby>天気<rt>てんき</rt></ruby>が<ruby>雨<rt>あめ</rt></ruby>の<ruby>時<rt>とき</rt></ruby><ruby>使<rt>つか</rt></ruby>うものです。<ruby>雨<rt>あめ</rt></ruby>の<ruby>時<rt>とき</rt></ruby><ruby>便利<rt>べんり</rt></ruby>です。<ruby>体<rt>からだ</rt></ruby>を<ruby>濡<rt>ぬ</rt></ruby>れないように<ruby>守<rt>まも</rt></ruby>ってくれます",
+					answer: "<ruby>傘<rt>かさ</rt></ruby>",
 				},
-				{ question: "ဂျပန်နိုင်ငံရဲ့ငွေစနစ်ကဘာလဲ?", answer: "Yen" },
-				{ question: "ဂျပန်နိုင်ငံရဲ့မြို့တော်ကဘယ်မြို့လဲ?", answer: "Tokyo" },
+				{
+					question:
+						"<ruby>乗<rt>の</rt></ruby>り<ruby>物<rt>もの</rt></ruby>です。<ruby>日本<rt>にほん</rt></ruby>にあります。<ruby>電車<rt>でんしゃ</rt></ruby>より<ruby>早<rt>はや</rt></ruby>いです。これは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "<ruby>新幹線<rt>しんかんせん</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>物<rt>もの</rt></ruby>です。<ruby>要<rt>い</rt></ruby>らないものを<ruby>入<rt>い</rt></ruby>れる<ruby>物<rt>もの</rt></ruby>です。だいたい<ruby>台所<rt>だいどころ</rt></ruby>にあります。<ruby>ごみ<rt>ごみ</rt></ruby>を<ruby>捨<rt>す</rt></ruby>てる<ruby>物<rt>もの</rt></ruby>です。",
+					answer: "<ruby>ゴミ箱<rt>ごみ</rt>ばこ</ruby>",
+				},
+				{
+					question:
+						"たくさんの<ruby>人<rt>ひと</rt></ruby>がこの<ruby>日<rt>ひ</rt></ruby>に<ruby>旅行<rt>りょこう</rt></ruby>したり<ruby>Camp<rt>キャンプ</rt></ruby>をしたりしています。<ruby>平日<rt>へいじつ</rt></ruby>じゃないです。ほとんどの<ruby>人<rt>ひと</rt></ruby>はこの<ruby>日<rt>ひ</rt></ruby>で<ruby>仕事<rt>しごと</rt></ruby>をしないです。<ruby>レストラン<rt>れすとらん</rt></ruby>や<ruby>お店<rt>みせ</rt></ruby>で<ruby>働<rt>はたら</rt></ruby>いた<ruby>人<rt>ひと</rt></ruby>はその<ruby>日<rt>ひ</rt></ruby>で<ruby>仕事<rt>しごと</rt></ruby>をします。この<ruby>日<rt>ひ</rt></ruby>を<ruby>何<rt>なん</rt></ruby>と<ruby>言<rt>い</rt></ruby>いますか。",
+					answer:
+						"<ruby>週末<rt>しゅうまつ</rt></ruby>/<ruby>土日<rt>どにち</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>粉<rt>こな</rt></ruby>です。<ruby>普通<rt>ふつう</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>は<ruby>白<rt>しろ</rt></ruby>いですけど<ruby>茶色<rt>ちゃいろ</rt></ruby>もあります。これはだいたい<ruby>台所<rt>だいどころ</rt></ruby>にあります。<ruby>料理<rt>りょうり</rt></ruby>と<ruby>ケーキ<rt>けーき</rt></ruby>を<ruby>作<rt>つく</rt></ruby>る<ruby>時<rt>とき</rt></ruby><ruby>使<rt>つか</rt></ruby>います。<ruby>コーヒー<rt>こーひー</rt></ruby>にも<ruby>入<rt>い</rt></ruby>れて<ruby>飲<rt>の</rt></ruby>みます。<ruby>小<rt>ちい</rt></ruby>さくて<ruby>甘<rt>あま</rt></ruby>い<ruby>粉<rt>こな</rt></ruby>です。これは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "さとう",
+				},
+				{
+					question:
+						"<ruby>場所<rt>ばしょ</rt></ruby>です。いろいろな<ruby>ビル<rt>びる</rt></ruby>にこの<ruby>場所<rt>ばしょ</rt></ruby>があります。<ruby>車<rt>くるま</rt></ruby>があったらその<ruby>場所<rt>ばしょ</rt></ruby>が<ruby>必要<rt>ひつよう</rt></ruby>です。<ruby>車<rt>くるま</rt></ruby>を<ruby>止<rt>と</rt></ruby>めるための<ruby>場所<rt>ばしょ</rt></ruby>です。",
+					answer: "<ruby>駐車場<rt>ちゅうしゃじょう</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>場所<rt>ばしょ</rt></ruby>です。<ruby>皆<rt>みな</rt></ruby>さんの<ruby>家<rt>いえ</rt></ruby>にもこの<ruby>場所<rt>ばしょ</rt></ruby>があります。<ruby>スーパー<rt>すーぱー</rt></ruby>や<ruby>デパート<rt>でぱーと</rt></ruby>にもこの<ruby>場所<rt>ばしょ</rt></ruby>があります。<ruby>私<rt>わたし</rt></ruby>たちは<ruby>早<rt>はや</rt></ruby>く<ruby>起<rt>お</rt></ruby>きてまずこの<ruby>場所<rt>ばしょ</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。<ruby>寝<rt>ね</rt></ruby>る<ruby>前<rt>まえ</rt></ruby>にも<ruby>行<rt>い</rt></ruby>きます。<ruby>健康<rt>けんこう</rt></ruby>のためにいい<ruby>場所<rt>ばしょ</rt></ruby>です。",
+					answer: "トイレ/<ruby>お手洗い<rt>おてあらい</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>スポーツ<rt>すぽーつ</rt></ruby>について<ruby>行<rt>おこな</rt></ruby>う<ruby>大会<rt>たいかい</rt></ruby>です。それが<ruby>世界中<rt>せかいじゅう</rt></ruby>で<ruby>行<rt>おこな</rt></ruby>われています。<ruby>四年<rt>よんねん</rt></ruby>で<ruby>一回<rt>いっかい</rt></ruby><ruby>行<rt>おこな</rt></ruby>います。",
+					answer: "オリンピック",
+				},
+				{
+					question:
+						"2024<ruby>年<rt>ねん</rt></ruby>の<ruby>七月<rt>しちがつ</rt></ruby>に<ruby>フランス<rt>ふらんす</rt></ruby>の<ruby>パリ<rt>ぱり</rt></ruby>で<ruby>行<rt>おこな</rt></ruby>いました。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "オリンピック",
+				},
+				{
+					question:
+						"<ruby>イタリア<rt>いたりあ</rt></ruby>の<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>です。<ruby>麺<rt>めん</rt></ruby>です。<ruby>普通<rt>ふつう</rt></ruby>は<ruby>フォーク<rt>ふぉーく</rt></ruby>で<ruby>食<rt>た</rt></ruby>べます。この<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>にいろいろな<ruby>ソース<rt>そーす</rt></ruby>があります。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "スパゲッティ/パスタ",
+				},
+				{
+					question:
+						"これは<ruby>機械<rt>きかい</rt></ruby>です。<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>を<ruby>買<rt>か</rt></ruby>うための<ruby>機械<rt>きかい</rt></ruby>です。<ruby>日本<rt>にほん</rt></ruby>の<ruby>街<rt>まち</rt></ruby>を<ruby>歩<rt>ある</rt></ruby>くとその<ruby>機械<rt>きかい</rt></ruby>をよく<ruby>見<rt>み</rt></ruby>えます。<ruby>東京<rt>とうきょう</rt></ruby>にこの<ruby>機械<rt>きかい</rt></ruby>がたくさんあります。この<ruby>機械<rt>きかい</rt></ruby>の<ruby>名前<rt>なまえ</rt></ruby>は<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "<ruby>自動販売機<rt>じどうはんばいき</rt></ruby>",
+				},
+				{
+					question:
+						"これは<ruby>色<rt>いろ</rt></ruby>が<ruby>三<rt>みっ</rt></ruby>つあります。<ruby>黄色<rt>きいろ</rt></ruby>、<ruby>赤色<rt>あかいろ</rt></ruby>と<ruby>緑色<rt>みどりいろ</rt></ruby>です。<ruby>日本人<rt>にほんじん</rt></ruby>はこの<ruby>緑<rt>みどり</rt></ruby>を<ruby>見<rt>み</rt></ruby>て<ruby>青<rt>あお</rt></ruby>と<ruby>言<rt>い</rt></ruby>います。<ruby>青<rt>あお</rt></ruby>いの<ruby>時<rt>とき</rt></ruby>は<ruby>車<rt>くるま</rt></ruby>が<ruby>進<rt>すす</rt></ruby>みます。<ruby>黄色<rt>きいろ</rt></ruby>の<ruby>時<rt>とき</rt></ruby>は<ruby>気<rt>き</rt></ruby>を<ruby>付<rt>つ</rt></ruby>けてください。<ruby>赤色<rt>あかいろ</rt></ruby>の<ruby>時<rt>とき</rt></ruby>は<ruby>車<rt>くるま</rt></ruby>を<ruby>止<rt>と</rt></ruby>めなきゃいけないです。これは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "<ruby>信号<rt>しんごう</rt></ruby>",
+				},
+				{
+					question:
+						"これは<ruby>果物<rt>くだもの</rt></ruby>です。<ruby>夏<rt>なつ</rt></ruby>になったらみんなこれを<ruby>食<rt>た</rt></ruby>べます。<ruby>丸<rt>まる</rt></ruby>くて<ruby>大<rt>おお</rt></ruby>きいです。<ruby>外<rt>そと</rt></ruby>は<ruby>緑色<rt>みどりいろ</rt></ruby>ですが<ruby>中<rt>なか</rt></ruby>は<ruby>赤<rt>あか</rt></ruby>い<ruby>色<rt>いろ</rt></ruby>です。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "スイカ",
+				},
+				{
+					question:
+						"<ruby>夜<rt>よる</rt></ruby>に<ruby>空<rt>そら</rt></ruby>で<ruby>光<rt>ひか</rt></ruby>っているもの。たくさんあります。<ruby>月<rt>つき</rt></ruby>の<ruby>隣<rt>となり</rt></ruby>にあります。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "<ruby>星<rt>ほし</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>人<rt>ひと</rt></ruby>が<ruby>住<rt>す</rt></ruby>んでいて、たくさんの<ruby>家<rt>いえ</rt></ruby>や<ruby>ビル<rt>びる</rt></ruby>が<ruby>集<rt>あつ</rt></ruby>まっている<ruby>場所<rt>ばしょ</rt></ruby>です。（<ruby>大阪<rt>おおさか</rt></ruby>、<ruby>京都<rt>きょうと</rt></ruby>などが<ruby>有名<rt>ゆうめい</rt></ruby>です。）それは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer:
+						"<ruby>街<rt>まち</rt></ruby>/<ruby>都会<rt>とかい</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>春<rt>はる</rt></ruby>になると<ruby>咲<rt>さ</rt></ruby>いて、<ruby>日本<rt>にほん</rt></ruby>で<ruby>お花見<rt>おはなみ</rt></ruby>をすることで<ruby>有名<rt>ゆうめい</rt></ruby>な<ruby>花<rt>はな</rt></ruby>です。<ruby>ピンク<rt>ぴんく</rt></ruby><ruby>色<rt>いろ</rt></ruby>が<ruby>多<rt>おお</rt></ruby>いです。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "<ruby>桜<rt>さくら</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>空<rt>そら</rt></ruby>を<ruby>飛<rt>と</rt></ruby>ぶ<ruby>大<rt>おお</rt></ruby>きい<ruby>乗<rt>の</rt></ruby>り<ruby>物<rt>もの</rt></ruby>で、<ruby>人<rt>ひと</rt></ruby>をたくさん<ruby>運<rt>はこ</rt></ruby>ぶことができます。<ruby>海外旅行<rt>かいがいりょこう</rt></ruby>にも<ruby>使<rt>つか</rt></ruby>います。",
+					answer: "<ruby>飛行機<rt>ひこうき</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>朝<rt>あさ</rt></ruby>に<ruby>飲<rt>の</rt></ruby>む<ruby>人<rt>ひと</rt></ruby>が<ruby>多<rt>おお</rt></ruby>いです。<ruby>黒<rt>くろ</rt></ruby>い<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>で、<ruby>苦<rt>にが</rt></ruby>いけれど<ruby>目<rt>め</rt></ruby>が<ruby>覚<rt>さ</rt></ruby>める<ruby>効果<rt>こうか</rt></ruby>（effect）があります。",
+					answer: "コーヒー",
+				},
+				{
+					question:
+						"<ruby>暑<rt>あつ</rt></ruby>いときや<ruby>疲<rt>つか</rt></ruby>れた<ruby>時<rt>とき</rt></ruby>に<ruby>飲<rt>の</rt></ruby>むことが<ruby>多<rt>おお</rt></ruby>い。<ruby>氷<rt>こおり</rt></ruby>が<ruby>入<rt>はい</rt></ruby>って<ruby>冷<rt>つめ</rt></ruby>たい<ruby>甘<rt>あま</rt></ruby>い<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>です。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+					answer: "ジュース",
+				},
+				{
+					question:
+						"<ruby>冬<rt>ふゆ</rt></ruby>に<ruby>外<rt>そと</rt></ruby>に<ruby>出<rt>で</rt></ruby>るときに<ruby>手<rt>て</rt></ruby>を<ruby>暖<rt>あたた</rt></ruby>めるために<ruby>着<rt>つ</rt></ruby>けるものです。<ruby>手首<rt>てくび</rt></ruby>までの<ruby>長<rt>なが</rt></ruby>さです。",
+					answer: "<ruby>手袋<rt>てぶくろ</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>長<rt>なが</rt></ruby>くて<ruby>黄色<rt>きいろ</rt></ruby>い<ruby>果物<rt>くだもの</rt></ruby>です。<ruby>皮<rt>かわ</rt></ruby>を<ruby>剥<rt>む</rt></ruby>いて<ruby>食<rt>た</rt></ruby>べる<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>で<ruby>猿<rt>さる</rt></ruby>が<ruby>大好<rt>だいす</rt></ruby>きと<ruby>言<rt>い</rt></ruby>われています。",
+					answer: "バナナ",
+				},
+				{
+					question:
+						"<ruby>壁<rt>かべ</rt></ruby>に<ruby>掛<rt>か</rt></ruby>けたり、<ruby>腕<rt>うで</rt></ruby>に<ruby>付<rt>つ</rt></ruby>けたりするものです。<ruby>丸<rt>まる</rt></ruby>いものが<ruby>多<rt>おお</rt></ruby>くて<ruby>数字<rt>すうじ</rt></ruby>がたくさん<ruby>並<rt>なら</rt></ruby>んでいます。<ruby>時間<rt>じかん</rt></ruby>を<ruby>教<rt>おし</rt></ruby>えるものです。",
+					answer: "<ruby>時計<rt>とけい</rt></ruby>",
+				},
+				{
+					question:
+						"<ruby>箱<rt>はこ</rt></ruby>のような<ruby>形<rt>かたち</rt></ruby>で<ruby>前<rt>まえ</rt></ruby>に<ruby>大<rt>おお</rt></ruby>きい<ruby>画面<rt>がめん</rt></ruby>があります。<ruby>音<rt>おと</rt></ruby>も<ruby>出<rt>で</rt></ruby>るし、<ruby>リモコン<rt>りもこん</rt></ruby>でコントロールすることができます。<ruby>映画<rt>えいが</rt></ruby>を<ruby>見<rt>み</rt></ruby>たり、<ruby>ニュース<rt>にゅーす</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いたりすることができる<ruby>物<rt>もの</rt></ruby>です。",
+					answer: "テレビ",
+				},
+				{
+					question:
+						"<ruby>小<rt>ちい</rt></ruby>さくてどこでも<ruby>持<rt>も</rt></ruby>っていけます。いろいろな<ruby>情報<rt>じょうほう</rt></ruby>を<ruby>見<rt>み</rt></ruby>たり、<ruby>友達<rt>ともだち</rt></ruby>と<ruby>話<rt>はな</rt></ruby>したりできてるものです。<ruby>毎日<rt>まいにち</rt></ruby><ruby>使<rt>つか</rt></ruby>うことができてみんな<ruby>好<rt>す</rt></ruby>きなものです。",
+					answer: "スマホ",
+				},
 			];
 
-			const card = document.getElementById("quiz-card");
-			const questionText = document.getElementById("question-text");
-			const cardBack = document.getElementById("card-back");
-			const flipBtn = document.getElementById("flip-btn");
-			const timerEl = document.getElementById("timer");
-			const nextBtn = document.getElementById("next-btn");
+			let answeredCount = 0;
+			let totalQuestions = 3; // Show only 3 questions
+			let currentQuestionIndex = 0;
+			let timers = [];
+			const TIME_LIMIT = 30; // 30 seconds per question
+			let questions = [];
 
-			// pick random question
-			const randomQ = questions[Math.floor(Math.random() * questions.length)];
-			questionText.textContent = "❓ " + randomQ.question;
-			cardBack.textContent = "✅ " + randomQ.answer;
+			// Get 3 random questions
+			function getRandomQuestions() {
+				const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+				return shuffled.slice(0, 3);
+			}
 
-			// Timer
-			let timeLeft = 30;
-			let timer = setInterval(() => {
-				timeLeft--;
-				if (timeLeft > 0) {
-					timerEl.textContent = timeLeft;
-				} else {
-					clearInterval(timer);
-					timerEl.textContent = "Time's Up!";
+			// Initialize the quiz
+			function initializeQuiz() {
+				questions = getRandomQuestions();
+				const quizContainer = document.getElementById("quiz-container");
+				quizContainer.innerHTML = "";
+				timers = [];
+				currentQuestionIndex = 0;
+				answeredCount = 0;
+
+				// Hide next button
+				document.getElementById("next-button-container").style.display = "none";
+
+				// Update progress elements
+				document.getElementById("total-questions").textContent = totalQuestions;
+				document.getElementById("current-question").textContent = "1";
+				document.getElementById("progress-bar").style.width = "0%";
+
+				// Create a card for each question
+				questions.forEach((question, index) => {
+					const card = document.createElement("div");
+					card.className = "card";
+					if (index > 0) card.classList.add("card-inactive");
+
+					card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <div class="question-number">${index + 1}</div>
+                            <div class="timer" id="timer-${index}">${
+						index === 0 ? TIME_LIMIT : "--"
+					}</div>
+                            <div class="question-text">
+								<div class="japanese-text">${question.question}</div>
+							</div>
+                            <div class="hint">${
+															index === 0
+																? "Click to reveal answer"
+																: "Complete previous question first"
+														}</div>
+                            <div class="timeup-message" id="timeup-${index}" style="display: none;">
+                                <div style="font-size: 2rem; margin-bottom: 10px;">⏰ Time's Up!</div>
+                                <div>Click to see answer</div>
+                            </div>
+                        </div>
+                        <div class="card-back">
+                            <div class="question-number">${index + 1}</div>
+                            <div class="answer-text">${question.answer}</div>
+                            <div class="flip-instruction">Click to return to question</div>
+                        </div>
+                    </div>
+                `;
+
+					// Set up card interactions
+					setupCard(card, index);
+
+					quizContainer.appendChild(card);
+				});
+
+				// Start the first timer
+				startTimer(0);
+			}
+
+			// Set up card interactions
+			function setupCard(card, index) {
+				const timerElement = card.querySelector(".timer");
+				const timeupMessage = card.querySelector(".timeup-message");
+
+				card.addEventListener("click", () => {
+					// If card is inactive, don't do anything
+					if (card.classList.contains("card-inactive")) {
+						return;
+					}
+
+					// If time is up, show the answer when clicked
+					if (
+						card.classList.contains("time-up") &&
+						!card.classList.contains("flipped")
+					) {
+						card.classList.add("flipped");
+						return;
+					}
+
+					// If already answered, just allow flipping back and forth
+					if (card.classList.contains("answered")) {
+						card.classList.toggle("flipped");
+						return;
+					}
+
+					// Normal operation - flip to see answer
+					card.classList.toggle("flipped");
+
+					// If this is the first time flipping this card to see the answer
+					if (
+						card.classList.contains("flipped") &&
+						!card.classList.contains("answered")
+					) {
+						card.classList.add("answered");
+						answeredCount++;
+
+						// Stop the timer
+						if (timers[index]) {
+							clearInterval(timers[index]);
+						}
+
+						// Show next button
+						if (index < totalQuestions - 1) {
+							document.getElementById("next-button-container").style.display =
+								"block";
+						} else {
+							// If it's the last question, show celebration
+							setTimeout(() => {
+								document.getElementById("celebrate").style.display = "flex";
+							}, 1000);
+						}
+					}
+				});
+			}
+
+			// Activate the next question
+			function activateNextQuestion() {
+				// Deactivate current card
+				const currentCard =
+					document.querySelectorAll(".card")[currentQuestionIndex];
+				currentCard.classList.add("card-inactive");
+
+				// Update progress
+				currentQuestionIndex++;
+				document.getElementById("current-question").textContent =
+					currentQuestionIndex + 1;
+				document.getElementById("progress-bar").style.width = `${
+					(currentQuestionIndex / totalQuestions) * 100
+				}%`;
+
+				// Hide next button
+				document.getElementById("next-button-container").style.display = "none";
+
+				// If there are more questions, activate the next one
+				if (currentQuestionIndex < totalQuestions) {
+					const nextCard =
+						document.querySelectorAll(".card")[currentQuestionIndex];
+					nextCard.classList.remove("card-inactive");
+
+					// Update next card hint
+					const hint = nextCard.querySelector(".hint");
+					hint.textContent = "Click to reveal answer";
+
+					// Start next timer
+					startTimer(currentQuestionIndex);
 				}
-			}, 1000);
+			}
 
-			// Flip only when button clicked
-			flipBtn.addEventListener("click", () => {
-				card.classList.toggle("flipped");
-				flipBtn.textContent = card.classList.contains("flipped")
-					? "Show Question"
-					: "Show Answer";
+			// Start timer for a specific question
+			function startTimer(index) {
+				const card = document.querySelectorAll(".card")[index];
+				const timerElement = card.querySelector(".timer");
+				const timeupMessage = card.querySelector(".timeup-message");
+				let timeLeft = TIME_LIMIT;
 
-				// Stop timer immediately when showing answer
-				clearInterval(timer);
+				// Update timer class based on time left
+				const updateTimerClass = () => {
+					timerElement.classList.remove("warning", "danger", "time-up");
+					if (timeLeft <= 5) {
+						timerElement.classList.add("danger");
+					} else if (timeLeft <= 10) {
+						timerElement.classList.add("warning");
+					}
+				};
 
-				// If timer not already "Time's Up!", show the remaining time
-				if (timeLeft > 0) {
-					timerEl.textContent = "Stopped at: " + timeLeft;
-				}
-			});
+				// Initial class update
+				updateTimerClass();
+
+				// Start the timer
+				timers[index] = setInterval(() => {
+					timeLeft--;
+					timerElement.textContent = timeLeft;
+					updateTimerClass();
+
+					if (timeLeft <= 0) {
+						clearInterval(timers[index]);
+						card.classList.add("time-up");
+						timerElement.classList.add("time-up");
+						timerElement.textContent = "0";
+						timeupMessage.style.display = "block";
+
+						// Mark as answered
+						if (!card.classList.contains("answered")) {
+							card.classList.add("answered");
+							answeredCount++;
+						}
+
+						// Show next button if there are more questions
+						if (index < totalQuestions - 1) {
+							document.getElementById("next-button-container").style.display =
+								"block";
+						}
+					}
+				}, 1000);
+			}
+
+			// Initialize the quiz when page loads
+			window.onload = initializeQuiz;
+
+			// Add event listener to next button
+			document
+				.getElementById("next-button")
+				.addEventListener("click", activateNextQuestion);
 		</script>
 	</body>
 </html>
