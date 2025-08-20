@@ -92,7 +92,7 @@
 
 			.card {
 				width: 350px;
-				height: 490px;
+				height: 519px;
 				perspective: 1000px;
 				cursor: pointer;
 				position: relative;
@@ -173,6 +173,8 @@
 				margin-top: 20px;
 				font-size: 0.9rem;
 				opacity: 0.8;
+				position: absolute;
+				bottom:2rem;
 			}
 
 			.answer-text {
@@ -395,124 +397,119 @@
 			const allQuestions = [
 				{
 					question:
-						"<ruby>物<rt>もの</rt></ruby>です。<ruby>天気<rt>てんき</rt></ruby>が<ruby>雨<rt>あめ</rt></ruby>の<ruby>時<rt>とき</rt></ruby><ruby>使<rt>つか</rt></ruby>うものです。<ruby>雨<rt>あめ</rt></ruby>の<ruby>時<rt>とき</rt></ruby><ruby>便利<rt>べんり</rt></ruby>です。<ruby>体<rt>からだ</rt></ruby>を<ruby>濡<rt>ぬ</rt></ruby>れないように<ruby>守<rt>まも</rt></ruby>ってくれます",
+						"<ruby>物<rt>もの</rt></ruby>です。<ruby>天気<rt>てんき</rt></ruby> が <ruby>雨<rt>あめ</rt></ruby> の <ruby>時<rt>とき</rt></ruby><ruby>使<rt>つか</rt></ruby>うものです。<ruby>雨<rt>あめ</rt></ruby> の <ruby>時<rt>とき</rt></ruby><ruby>便利<rt>べんり</rt></ruby>です。<ruby>体<rt>からだ</rt></ruby> を <ruby>濡<rt>ぬ</rt></ruby>れない ように <ruby>守<rt>まも</rt></ruby>ってくれます",
 					answer: "<ruby>傘<rt>かさ</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>乗<rt>の</rt></ruby>り<ruby>物<rt>もの</rt></ruby>です。<ruby>日本<rt>にほん</rt></ruby>にあります。<ruby>電車<rt>でんしゃ</rt></ruby>より<ruby>早<rt>はや</rt></ruby>いです。これは<ruby>何<rt>なん</rt></ruby>ですか。",
+						"<ruby>乗<rt>の</rt></ruby>り<ruby>物<rt>もの</rt></ruby>です。<ruby>日本<rt>にほん</rt></ruby> に あります。<ruby>電車<rt>でんしゃ</rt></ruby> より <ruby>早<rt>はや</rt></ruby>いです。これは <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "<ruby>新幹線<rt>しんかんせん</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>物<rt>もの</rt></ruby>です。<ruby>要<rt>い</rt></ruby>らないものを<ruby>入<rt>い</rt></ruby>れる<ruby>物<rt>もの</rt></ruby>です。だいたい<ruby>台所<rt>だいどころ</rt></ruby>にあります。<ruby>ごみ<rt>ごみ</rt></ruby>を<ruby>捨<rt>す</rt></ruby>てる<ruby>物<rt>もの</rt></ruby>です。",
+						"<ruby>物<rt>もの</rt></ruby>です。<ruby>要<rt>い</rt></ruby>らないもの を <ruby>入<rt>い</rt></ruby>れる<ruby>物<rt>もの</rt></ruby>です。だいたい <ruby>台所<rt>だいどころ</rt></ruby> に あります。<ruby>ごみ</ruby> を <ruby>捨<rt>す</rt></ruby>てる<ruby>物<rt>もの</rt></ruby>です。",
 					answer: "<ruby>ゴミ箱<rt>ごみ</rt>ばこ</ruby>",
 				},
 				{
 					question:
-						"たくさんの<ruby>人<rt>ひと</rt></ruby>がこの<ruby>日<rt>ひ</rt></ruby>に<ruby>旅行<rt>りょこう</rt></ruby>したり<ruby>Camp<rt>キャンプ</rt></ruby>をしたりしています。<ruby>平日<rt>へいじつ</rt></ruby>じゃないです。ほとんどの<ruby>人<rt>ひと</rt></ruby>はこの<ruby>日<rt>ひ</rt></ruby>で<ruby>仕事<rt>しごと</rt></ruby>をしないです。<ruby>レストラン<rt>れすとらん</rt></ruby>や<ruby>お店<rt>みせ</rt></ruby>で<ruby>働<rt>はたら</rt></ruby>いた<ruby>人<rt>ひと</rt></ruby>はその<ruby>日<rt>ひ</rt></ruby>で<ruby>仕事<rt>しごと</rt></ruby>をします。この<ruby>日<rt>ひ</rt></ruby>を<ruby>何<rt>なん</rt></ruby>と<ruby>言<rt>い</rt></ruby>いますか。",
+						"たくさんの<ruby>人<rt>ひと</rt></ruby> が この<ruby>日<rt>ひ</rt></ruby>に<ruby>旅行<rt>りょこう</rt></ruby>したり<ruby>Camp</ruby> を したりしています。<ruby>平日<rt>へいじつ</rt></ruby>じゃないです。ほとんどの<ruby>人<rt>ひと</rt></ruby> は この<ruby>日<rt>ひ</rt></ruby> で <ruby>仕事<rt>しごと</rt></ruby> を しないです。<ruby>レストラン<rt>れすとらん</rt></ruby>や<ruby>お店<rt>みせ</rt></ruby> で <ruby>働<rt>はたら</rt></ruby>いた<ruby>人<rt>ひと</rt></ruby> は その<ruby>日<rt>ひ</rt></ruby> で <ruby>仕事<rt>しごと</rt></ruby> を します。この<ruby>日<rt>ひ</rt></ruby> を <ruby>何<rt>なん</rt></ruby>と<ruby>言<rt>い</rt></ruby>いますか。",
 					answer:
 						"<ruby>週末<rt>しゅうまつ</rt></ruby>/<ruby>土日<rt>どにち</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>粉<rt>こな</rt></ruby>です。<ruby>普通<rt>ふつう</rt></ruby>の<ruby>色<rt>いろ</rt></ruby>は<ruby>白<rt>しろ</rt></ruby>いですけど<ruby>茶色<rt>ちゃいろ</rt></ruby>もあります。これはだいたい<ruby>台所<rt>だいどころ</rt></ruby>にあります。<ruby>料理<rt>りょうり</rt></ruby>と<ruby>ケーキ<rt>けーき</rt></ruby>を<ruby>作<rt>つく</rt></ruby>る<ruby>時<rt>とき</rt></ruby><ruby>使<rt>つか</rt></ruby>います。<ruby>コーヒー<rt>こーひー</rt></ruby>にも<ruby>入<rt>い</rt></ruby>れて<ruby>飲<rt>の</rt></ruby>みます。<ruby>小<rt>ちい</rt></ruby>さくて<ruby>甘<rt>あま</rt></ruby>い<ruby>粉<rt>こな</rt></ruby>です。これは<ruby>何<rt>なん</rt></ruby>ですか。",
+						"<ruby>粉<rt>こな</rt></ruby>です。<ruby>普通<rt>ふつう</rt></ruby> の <ruby>色<rt>いろ</rt></ruby>は<ruby>白<rt>しろ</rt></ruby>いですけど <ruby>茶色<rt>ちゃいろ</rt></ruby> も あります。これは だいたい <ruby>台所<rt>だいどころ</rt></ruby> に あります。<ruby>料理<rt>りょうり</rt></ruby> と <ruby>ケーキ<rt>けーき</rt></ruby> を <ruby>作<rt>つく</rt></ruby>る<ruby>時<rt>とき</rt></ruby><ruby>使<rt>つか</rt></ruby>います。<ruby>コーヒー<rt>こーひー</rt></ruby> にも <ruby>入<rt>い</rt></ruby>れて <ruby>飲<rt>の</rt></ruby>みます。<ruby>小<rt>ちい</rt></ruby>さくて <ruby>甘<rt>あま</rt></ruby>い<ruby>粉<rt>こな</rt></ruby>です。これ は <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "さとう",
 				},
 				{
 					question:
-						"<ruby>場所<rt>ばしょ</rt></ruby>です。いろいろな<ruby>ビル<rt>びる</rt></ruby>にこの<ruby>場所<rt>ばしょ</rt></ruby>があります。<ruby>車<rt>くるま</rt></ruby>があったらその<ruby>場所<rt>ばしょ</rt></ruby>が<ruby>必要<rt>ひつよう</rt></ruby>です。<ruby>車<rt>くるま</rt></ruby>を<ruby>止<rt>と</rt></ruby>めるための<ruby>場所<rt>ばしょ</rt></ruby>です。",
+						"<ruby>場所<rt>ばしょ</rt></ruby>です。いろいろな <ruby>ビル<rt>びる</rt></ruby> に この<ruby>場所<rt>ばしょ</rt></ruby> が あります。<ruby>車<rt>くるま</rt></ruby> が あったらその<ruby>場所<rt>ばしょ</rt></ruby> が <ruby>必要<rt>ひつよう</rt></ruby>です。<ruby>車<rt>くるま</rt></ruby> を <ruby>止<rt>と</rt></ruby>める ための <ruby>場所<rt>ばしょ</rt></ruby>です。",
 					answer: "<ruby>駐車場<rt>ちゅうしゃじょう</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>場所<rt>ばしょ</rt></ruby>です。<ruby>皆<rt>みな</rt></ruby>さんの<ruby>家<rt>いえ</rt></ruby>にもこの<ruby>場所<rt>ばしょ</rt></ruby>があります。<ruby>スーパー<rt>すーぱー</rt></ruby>や<ruby>デパート<rt>でぱーと</rt></ruby>にもこの<ruby>場所<rt>ばしょ</rt></ruby>があります。<ruby>私<rt>わたし</rt></ruby>たちは<ruby>早<rt>はや</rt></ruby>く<ruby>起<rt>お</rt></ruby>きてまずこの<ruby>場所<rt>ばしょ</rt></ruby>へ<ruby>行<rt>い</rt></ruby>きます。<ruby>寝<rt>ね</rt></ruby>る<ruby>前<rt>まえ</rt></ruby>にも<ruby>行<rt>い</rt></ruby>きます。<ruby>健康<rt>けんこう</rt></ruby>のためにいい<ruby>場所<rt>ばしょ</rt></ruby>です。",
+						"<ruby>場所<rt>ばしょ</rt></ruby>です。<ruby>皆<rt>みな</rt></ruby>さん の <ruby>家<rt>いえ</rt></ruby> にも この <ruby>場所<rt>ばしょ</rt></ruby> が あります。<ruby>スーパー<rt>すーぱー</rt></ruby>や<ruby>デパート<rt>でぱーと</rt></ruby> に もこの<ruby>場所<rt>ばしょ</rt></ruby> が あります。<ruby>私<rt>わたし</rt></ruby>たちは <ruby>早<rt>はや</rt></ruby>く <ruby>起<rt>お</rt></ruby>きて まず この<ruby>場所<rt>ばしょ</rt></ruby> へ <ruby>行<rt>い</rt></ruby>きます。<ruby>寝<rt>ね</rt></ruby>る<ruby>前<rt>まえ</rt></ruby> にも <ruby>行<rt>い</rt></ruby>きます。<ruby>健康<rt>けんこう</rt></ruby> の ために いい<ruby>場所<rt>ばしょ</rt></ruby>です。",
 					answer: "トイレ/<ruby>お手洗い<rt>おてあらい</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>スポーツ<rt>すぽーつ</rt></ruby>について<ruby>行<rt>おこな</rt></ruby>う<ruby>大会<rt>たいかい</rt></ruby>です。それが<ruby>世界中<rt>せかいじゅう</rt></ruby>で<ruby>行<rt>おこな</rt></ruby>われています。<ruby>四年<rt>よんねん</rt></ruby>で<ruby>一回<rt>いっかい</rt></ruby><ruby>行<rt>おこな</rt></ruby>います。",
+						"<ruby>スポーツ<rt>すぽーつ</rt></ruby> に ついて <ruby>行<rt>おこな</rt></ruby>う<ruby>大会<rt>たいかい</rt></ruby>です。それ が <ruby>世界中<rt>せかいじゅう</rt></ruby> で <ruby>行<rt>おこな</rt></ruby>われています。<ruby>四年<rt>よんねん</rt></ruby> で <ruby>一回<rt>いっかい</rt></ruby><ruby>行<rt>おこな</rt></ruby>います。2024<ruby>年<rt>ねん</rt></ruby> の <ruby>七月<rt>しちがつ</rt></ruby> に <ruby>フランス<rt>ふらんす</rt></ruby> の <ruby>パリ<rt>ぱり</rt></ruby> で <ruby>行<rt>おこな</rt></ruby>いました。それ は <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "オリンピック",
 				},
 				{
 					question:
-						"2024<ruby>年<rt>ねん</rt></ruby>の<ruby>七月<rt>しちがつ</rt></ruby>に<ruby>フランス<rt>ふらんす</rt></ruby>の<ruby>パリ<rt>ぱり</rt></ruby>で<ruby>行<rt>おこな</rt></ruby>いました。それは<ruby>何<rt>なん</rt></ruby>ですか。",
-					answer: "オリンピック",
-				},
-				{
-					question:
-						"<ruby>イタリア<rt>いたりあ</rt></ruby>の<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>です。<ruby>麺<rt>めん</rt></ruby>です。<ruby>普通<rt>ふつう</rt></ruby>は<ruby>フォーク<rt>ふぉーく</rt></ruby>で<ruby>食<rt>た</rt></ruby>べます。この<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>の<ruby>上<rt>うえ</rt></ruby>にいろいろな<ruby>ソース<rt>そーす</rt></ruby>があります。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+						"<ruby>イタリア<rt>いたりあ</rt></ruby> の <ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>です。<ruby>麺<rt>めん</rt></ruby>です。<ruby>普通<rt>ふつう</rt></ruby> は <ruby>フォーク<rt>ふぉーく</rt></ruby> で <ruby>食<rt>た</rt></ruby>べます。この <ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby> の <ruby>上<rt>うえ</rt></ruby> に いろいろな <ruby>ソース<rt>そーす</rt></ruby> が あります。それは<ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "スパゲッティ/パスタ",
 				},
 				{
 					question:
-						"これは<ruby>機械<rt>きかい</rt></ruby>です。<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>を<ruby>買<rt>か</rt></ruby>うための<ruby>機械<rt>きかい</rt></ruby>です。<ruby>日本<rt>にほん</rt></ruby>の<ruby>街<rt>まち</rt></ruby>を<ruby>歩<rt>ある</rt></ruby>くとその<ruby>機械<rt>きかい</rt></ruby>をよく<ruby>見<rt>み</rt></ruby>えます。<ruby>東京<rt>とうきょう</rt></ruby>にこの<ruby>機械<rt>きかい</rt></ruby>がたくさんあります。この<ruby>機械<rt>きかい</rt></ruby>の<ruby>名前<rt>なまえ</rt></ruby>は<ruby>何<rt>なん</rt></ruby>ですか。",
+						"これ は <ruby>機械<rt>きかい</rt></ruby>です。<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby> を <ruby>買<rt>か</rt></ruby>うための <ruby>機械<rt>きかい</rt></ruby>です。<ruby>日本<rt>にほん</rt></ruby> の <ruby>街<rt>まち</rt></ruby> を <ruby>歩<rt>ある</rt></ruby>くとその <ruby>機械<rt>きかい</rt></ruby> を よく<ruby>見<rt>み</rt></ruby>えます。<ruby>東京<rt>とうきょう</rt></ruby> に この<ruby>機械<rt>きかい</rt></ruby> が たくさんあります。この<ruby>機械<rt>きかい</rt></ruby> の <ruby>名前<rt>なまえ</rt></ruby> は <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "<ruby>自動販売機<rt>じどうはんばいき</rt></ruby>",
 				},
 				{
 					question:
-						"これは<ruby>色<rt>いろ</rt></ruby>が<ruby>三<rt>みっ</rt></ruby>つあります。<ruby>黄色<rt>きいろ</rt></ruby>、<ruby>赤色<rt>あかいろ</rt></ruby>と<ruby>緑色<rt>みどりいろ</rt></ruby>です。<ruby>日本人<rt>にほんじん</rt></ruby>はこの<ruby>緑<rt>みどり</rt></ruby>を<ruby>見<rt>み</rt></ruby>て<ruby>青<rt>あお</rt></ruby>と<ruby>言<rt>い</rt></ruby>います。<ruby>青<rt>あお</rt></ruby>いの<ruby>時<rt>とき</rt></ruby>は<ruby>車<rt>くるま</rt></ruby>が<ruby>進<rt>すす</rt></ruby>みます。<ruby>黄色<rt>きいろ</rt></ruby>の<ruby>時<rt>とき</rt></ruby>は<ruby>気<rt>き</rt></ruby>を<ruby>付<rt>つ</rt></ruby>けてください。<ruby>赤色<rt>あかいろ</rt></ruby>の<ruby>時<rt>とき</rt></ruby>は<ruby>車<rt>くるま</rt></ruby>を<ruby>止<rt>と</rt></ruby>めなきゃいけないです。これは<ruby>何<rt>なん</rt></ruby>ですか。",
+						"これ は <ruby>色<rt>いろ</rt></ruby> が <ruby>三<rt>みっ</rt></ruby>つあります。<ruby>黄色<rt>きいろ</rt></ruby>、<ruby>赤色<rt>あかいろ</rt></ruby> と <ruby>緑色<rt>みどりいろ</rt></ruby>です。<ruby>日本人<rt>にほんじん</rt></ruby> は この<ruby>緑<rt>みどり</rt></ruby> を <ruby>見<rt>み</rt></ruby>て <ruby>青<rt>あお</rt></ruby>と<ruby>言<rt>い</rt></ruby>います。<ruby>青<rt>あお</rt></ruby>いの<ruby>時<rt>とき</rt></ruby> は <ruby>車<rt>くるま</rt></ruby> が <ruby>進<rt>すす</rt></ruby>みます。<ruby>黄色<rt>きいろ</rt></ruby> の <ruby>時<rt>とき</rt></ruby>は <ruby>気<rt>き</rt></ruby>を<ruby>付<rt>つ</rt></ruby>けて ください。<ruby>赤色<rt>あかいろ</rt></ruby> の <ruby>時<rt>とき</rt></ruby>は <ruby>車<rt>くるま</rt></ruby> を <ruby>止<rt>と</rt></ruby>めなきゃいけないです。これは <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "<ruby>信号<rt>しんごう</rt></ruby>",
 				},
 				{
 					question:
-						"これは<ruby>果物<rt>くだもの</rt></ruby>です。<ruby>夏<rt>なつ</rt></ruby>になったらみんなこれを<ruby>食<rt>た</rt></ruby>べます。<ruby>丸<rt>まる</rt></ruby>くて<ruby>大<rt>おお</rt></ruby>きいです。<ruby>外<rt>そと</rt></ruby>は<ruby>緑色<rt>みどりいろ</rt></ruby>ですが<ruby>中<rt>なか</rt></ruby>は<ruby>赤<rt>あか</rt></ruby>い<ruby>色<rt>いろ</rt></ruby>です。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+						"これ は <ruby>果物<rt>くだもの</rt></ruby>です。<ruby>夏<rt>なつ</rt></ruby> に なったら みんな これ を <ruby>食<rt>た</rt></ruby>べます。<ruby>丸<rt>まる</rt></ruby>くて <ruby>大<rt>おお</rt></ruby>きいです。<ruby>外<rt>そと</rt></ruby> は <ruby>緑色<rt>みどりいろ</rt></ruby>です が <ruby>中<rt>なか</rt></ruby> は <ruby>赤<rt>あか</rt></ruby>い<ruby>色<rt>いろ</rt></ruby>です。それ は <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "スイカ",
 				},
 				{
 					question:
-						"<ruby>夜<rt>よる</rt></ruby>に<ruby>空<rt>そら</rt></ruby>で<ruby>光<rt>ひか</rt></ruby>っているもの。たくさんあります。<ruby>月<rt>つき</rt></ruby>の<ruby>隣<rt>となり</rt></ruby>にあります。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+						"<ruby>夜<rt>よる</rt></ruby> に <ruby>空<rt>そら</rt></ruby> で <ruby>光<rt>ひか</rt></ruby>っている ものです。<ruby>空<rt>そら</rt></ruby> に たくさん あります。<ruby>月<rt>つき</rt></ruby> の <ruby>隣<rt>となり</rt></ruby> に あります。それ は <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "<ruby>星<rt>ほし</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>人<rt>ひと</rt></ruby>が<ruby>住<rt>す</rt></ruby>んでいて、たくさんの<ruby>家<rt>いえ</rt></ruby>や<ruby>ビル<rt>びる</rt></ruby>が<ruby>集<rt>あつ</rt></ruby>まっている<ruby>場所<rt>ばしょ</rt></ruby>です。（<ruby>大阪<rt>おおさか</rt></ruby>、<ruby>京都<rt>きょうと</rt></ruby>などが<ruby>有名<rt>ゆうめい</rt></ruby>です。）それは<ruby>何<rt>なん</rt></ruby>ですか。",
+						"<ruby>人<rt>ひと</rt></ruby> が <ruby>住<rt>す</rt></ruby>んでいて、たくさん の <ruby>家<rt>いえ</rt></ruby>や<ruby>ビル<rt>びる</rt></ruby> が <ruby>集<rt>あつ</rt></ruby>まっている<ruby>場所<rt> ばしょ</rt></ruby>です。（<ruby>大阪<rt>おおさか</rt></ruby>、<ruby>京都<rt>きょうと</rt></ruby>など が <ruby>有名<rt>ゆうめい</rt></ruby>です。）それは<ruby>何<rt>なん</rt></ruby>ですか。",
 					answer:
 						"<ruby>街<rt>まち</rt></ruby>/<ruby>都会<rt>とかい</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>春<rt>はる</rt></ruby>になると<ruby>咲<rt>さ</rt></ruby>いて、<ruby>日本<rt>にほん</rt></ruby>で<ruby>お花見<rt>おはなみ</rt></ruby>をすることで<ruby>有名<rt>ゆうめい</rt></ruby>な<ruby>花<rt>はな</rt></ruby>です。<ruby>ピンク<rt>ぴんく</rt></ruby><ruby>色<rt>いろ</rt></ruby>が<ruby>多<rt>おお</rt></ruby>いです。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+						"<ruby>春<rt>はる</rt></ruby> に なると <ruby>咲<rt>さ</rt></ruby>いて、<ruby>日本<rt>にほん</rt></ruby> で <ruby>お花見<rt>おはなみ</rt></ruby> を することで <ruby>有名<rt>ゆうめい</rt></ruby>な <ruby>花<rt>はな</rt></ruby>です。<ruby>ピンク<rt>ぴんく</rt></ruby><ruby>色<rt>いろ</rt></ruby> が <ruby>多<rt>おお</rt></ruby>いです。それ は <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "<ruby>桜<rt>さくら</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>空<rt>そら</rt></ruby>を<ruby>飛<rt>と</rt></ruby>ぶ<ruby>大<rt>おお</rt></ruby>きい<ruby>乗<rt>の</rt></ruby>り<ruby>物<rt>もの</rt></ruby>で、<ruby>人<rt>ひと</rt></ruby>をたくさん<ruby>運<rt>はこ</rt></ruby>ぶことができます。<ruby>海外旅行<rt>かいがいりょこう</rt></ruby>にも<ruby>使<rt>つか</rt></ruby>います。",
+						"<ruby>空<rt>そら</rt></ruby> を <ruby>飛<rt>と</rt></ruby>ぶ<ruby>大<rt>おお</rt></ruby>きい <ruby>乗<rt>の</rt></ruby>り<ruby>物<rt>もの</rt></ruby> で、<ruby>人<rt>ひと</rt></ruby> を たくさん <ruby>運<rt>はこ</rt></ruby>ぶ こと が できます。<ruby>海外旅行<rt>かいがいりょこう</rt></ruby> にも <ruby>使<rt>つか</rt></ruby>います。",
 					answer: "<ruby>飛行機<rt>ひこうき</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>朝<rt>あさ</rt></ruby>に<ruby>飲<rt>の</rt></ruby>む<ruby>人<rt>ひと</rt></ruby>が<ruby>多<rt>おお</rt></ruby>いです。<ruby>黒<rt>くろ</rt></ruby>い<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>で、<ruby>苦<rt>にが</rt></ruby>いけれど<ruby>目<rt>め</rt></ruby>が<ruby>覚<rt>さ</rt></ruby>める<ruby>効果<rt>こうか</rt></ruby>（effect）があります。",
+						"<ruby>朝<rt>あさ</rt></ruby> に <ruby>飲<rt>の</rt></ruby>む<ruby>人<rt>ひと</rt></ruby> が <ruby>多<rt>おお</rt></ruby>いです。<ruby>黒<rt>くろ</rt></ruby>い <ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>で、<ruby>苦<rt>にが</rt></ruby>い けれど <ruby>目<rt>め </rt></ruby>が <ruby>覚<rt>さ</rt></ruby>める <ruby>効果<rt>こうか</rt></ruby>（effect） が あります。",
 					answer: "コーヒー",
 				},
 				{
 					question:
-						"<ruby>暑<rt>あつ</rt></ruby>いときや<ruby>疲<rt>つか</rt></ruby>れた<ruby>時<rt>とき</rt></ruby>に<ruby>飲<rt>の</rt></ruby>むことが<ruby>多<rt>おお</rt></ruby>い。<ruby>氷<rt>こおり</rt></ruby>が<ruby>入<rt>はい</rt></ruby>って<ruby>冷<rt>つめ</rt></ruby>たい<ruby>甘<rt>あま</rt></ruby>い<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>です。それは<ruby>何<rt>なん</rt></ruby>ですか。",
+						"<ruby>暑<rt>あつ</rt></ruby>い とき や <ruby>疲<rt>つか</rt></ruby>れた <ruby>時<rt>とき</rt></ruby> に <ruby>飲<rt>の</rt></ruby>む こと が <ruby>多<rt>おお</rt></ruby>い。<ruby>氷<rt>こおり</rt></ruby> が <ruby>入<rt>はい</rt></ruby>って<ruby>冷<rt>つめ</rt></ruby>たい <ruby>甘<rt>あま</rt></ruby>い <ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>です。それ は <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "ジュース",
 				},
 				{
 					question:
-						"<ruby>冬<rt>ふゆ</rt></ruby>に<ruby>外<rt>そと</rt></ruby>に<ruby>出<rt>で</rt></ruby>るときに<ruby>手<rt>て</rt></ruby>を<ruby>暖<rt>あたた</rt></ruby>めるために<ruby>着<rt>つ</rt></ruby>けるものです。<ruby>手首<rt>てくび</rt></ruby>までの<ruby>長<rt>なが</rt></ruby>さです。",
+						"<ruby>冬<rt>ふゆ</rt></ruby> に <ruby>外<rt>そと</rt></ruby> に <ruby>出<rt>で</rt></ruby>るときに<ruby>手<rt>て</rt></ruby> を <ruby>暖<rt>あたた</rt></ruby>める ため に <ruby>着<rt>つ</rt></ruby>ける ものです。<ruby>手首<rt>てくび</rt></ruby> まで の <ruby>長<rt>なが</rt></ruby>さです。",
 					answer: "<ruby>手袋<rt>てぶくろ</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>長<rt>なが</rt></ruby>くて<ruby>黄色<rt>きいろ</rt></ruby>い<ruby>果物<rt>くだもの</rt></ruby>です。<ruby>皮<rt>かわ</rt></ruby>を<ruby>剥<rt>む</rt></ruby>いて<ruby>食<rt>た</rt></ruby>べる<ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby>で<ruby>猿<rt>さる</rt></ruby>が<ruby>大好<rt>だいす</rt></ruby>きと<ruby>言<rt>い</rt></ruby>われています。",
+						"<ruby>長<rt>なが</rt></ruby>くて <ruby>黄色<rt>きいろ</rt></ruby>い<ruby>果物<rt>くだもの</rt></ruby>です。<ruby>皮<rt>かわ</rt></ruby> を <ruby>剥<rt>む</rt></ruby>いて <ruby>食<rt>た</rt></ruby>べる <ruby>食<rt>た</rt></ruby>べ<ruby>物<rt>もの</rt></ruby> で <ruby>猿<rt>さる</rt></ruby> が <ruby>大好<rt>だいす</rt></ruby>き と <ruby>言<rt>い</rt></ruby>われて います。",
 					answer: "バナナ",
 				},
 				{
 					question:
-						"<ruby>壁<rt>かべ</rt></ruby>に<ruby>掛<rt>か</rt></ruby>けたり、<ruby>腕<rt>うで</rt></ruby>に<ruby>付<rt>つ</rt></ruby>けたりするものです。<ruby>丸<rt>まる</rt></ruby>いものが<ruby>多<rt>おお</rt></ruby>くて<ruby>数字<rt>すうじ</rt></ruby>がたくさん<ruby>並<rt>なら</rt></ruby>んでいます。<ruby>時間<rt>じかん</rt></ruby>を<ruby>教<rt>おし</rt></ruby>えるものです。",
+						"<ruby>壁<rt>かべ</rt></ruby> に <ruby>掛<rt>か</rt></ruby>けたり、<ruby>腕<rt>うで</rt></ruby> に <ruby>付<rt>つ</rt></ruby>けたり するものです。<ruby>丸<rt>まる</rt></ruby>いもの が <ruby>多<rt>おお</rt></ruby>くて <ruby>数字<rt>すうじ</rt></ruby> が たくさん <ruby>並<rt>なら</rt></ruby>んでいます。<ruby>時間<rt>じかん</rt></ruby> を <ruby>教<rt>おし</rt></ruby>えるものです。",
 					answer: "<ruby>時計<rt>とけい</rt></ruby>",
 				},
 				{
 					question:
-						"<ruby>箱<rt>はこ</rt></ruby>のような<ruby>形<rt>かたち</rt></ruby>で<ruby>前<rt>まえ</rt></ruby>に<ruby>大<rt>おお</rt></ruby>きい<ruby>画面<rt>がめん</rt></ruby>があります。<ruby>音<rt>おと</rt></ruby>も<ruby>出<rt>で</rt></ruby>るし、<ruby>リモコン<rt>りもこん</rt></ruby>でコントロールすることができます。<ruby>映画<rt>えいが</rt></ruby>を<ruby>見<rt>み</rt></ruby>たり、<ruby>ニュース<rt>にゅーす</rt></ruby>を<ruby>聞<rt>き</rt></ruby>いたりすることができる<ruby>物<rt>もの</rt></ruby>です。",
+						"<ruby>箱<rt>はこ</rt></ruby> の ような <ruby>形<rt>かたち</rt></ruby> で <ruby>前<rt>まえ</rt></ruby>に<ruby>大<rt>おお</rt></ruby>きい <ruby>画面<rt>がめん</rt></ruby> が あります。<ruby>音<rt>おと</rt></ruby>も<ruby>出<rt>で</rt></ruby>るし、<ruby>リモコン<rt>りもこん</rt></ruby> で コントロールする こと が できます。<ruby>映画<rt>えいが</rt></ruby> を <ruby>見<rt>み</rt></ruby>たり、<ruby>ニュース<rt>にゅーす</rt></ruby> を <ruby>聞<rt>き</rt></ruby>いたりする こと が できる<ruby>物<rt>もの</rt></ruby>です。",
 					answer: "テレビ",
 				},
 				{
 					question:
-						"<ruby>小<rt>ちい</rt></ruby>さくてどこでも<ruby>持<rt>も</rt></ruby>っていけます。いろいろな<ruby>情報<rt>じょうほう</rt></ruby>を<ruby>見<rt>み</rt></ruby>たり、<ruby>友達<rt>ともだち</rt></ruby>と<ruby>話<rt>はな</rt></ruby>したりできてるものです。<ruby>毎日<rt>まいにち</rt></ruby><ruby>使<rt>つか</rt></ruby>うことができてみんな<ruby>好<rt>す</rt></ruby>きなものです。",
+						"<ruby>小<rt>ちい</rt></ruby>さくて どこ でも <ruby>持<rt>も</rt></ruby>って いけます。いろいろな <ruby>情報<rt>じょうほう</rt></ruby> を <ruby>見<rt>み</rt></ruby>たり、<ruby>友達<rt>ともだち</rt></ruby> と <ruby>話<rt>はな</rt></ruby>したり できてる ものです。<ruby>毎日<rt>まいにち</rt></ruby><ruby>使<rt>つか</rt></ruby>う こと が でき て みんな <ruby>好<rt>す</rt></ruby>きな ものです。",
 					answer: "スマホ",
 				},
 			];
