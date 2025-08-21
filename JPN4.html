@@ -1,492 +1,540 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <title>Quiz Celebration</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #f0f0f0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .quiz-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .card.locked,
-        .card.submitted {
-            background: rgba(20, 20, 20, 0.8);
-            /* Dark gray with transparency */
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-            /* Stronger shadow for depth */
-            border: 1px solid #444;
-            position: relative;
-        }
-
-        .card.locked .content,
-        .card.submitted .content {
-            filter: blur(6px);
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        .card {
-            width: 400px;
-            min-height: 550px;
-            background: rgba(255, 255, 255, 0.92);
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            position: relative;
-            overflow: hidden;
-            font-size: 1.2rem;
-        }
-
-        .card img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .question {
-            font-weight: bold;
-            margin: 20px 0 15px;
-            font-size: 1em;
-        }
-
-        .options label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            gap: 10px;
-        }
-
-        .options input[type="radio"] {
-            transform: scale(1.5);
-            margin-right: 10px;
-        }
-
-        .submit-btn {
-            margin-top: 20px;
-            padding: 12px 24px;
-            background: #ff771d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        /* Overlay with question mark or status text */
-        .lock-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-
-            /* Blur the card behind */
-            backdrop-filter: blur(6px);
-            /* ✅ This applies the blur effect */
-            background: rgba(255, 255, 255, 0.1);
-            /* Light transparent layer */
-
-            color: #ff771d;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 7rem;
-            font-weight: bold;
-            text-align: center;
-            padding: 0px;
-            transition: background 0.3s ease;
-            pointer-events: none;
-            user-select: none;
-            z-index: 10;
-        }
-
-
-        /* Hide overlay on unlocked cards */
-        .card:not(.locked):not(.submitted) .lock-overlay {
-            display: none;
-        }
-
-        /* Smaller text for status */
-        .lock-overlay.status {
-            font-size: 3.5rem;
-            color: white;
-            backdrop-filter: blur(6px);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 0px;
-            border-radius: 15px;
-
-            /* ✅ Center content inside the card */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-
-        #try-again-container {
-            margin-top: 20px;
-            display: none;
-        }
-
-        #try-again-button {
-            padding: 10px 20px;
-            background: #ff771d;
-            color: rgb(255, 255, 255);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        #congrats {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 9999;
-            color: white;
-            font-size: 2rem;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        #confetti-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        @keyframes floatSparkle {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-
-            100% {
-                transform: translateY(-800px) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        .sparkle {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: radial-gradient(circle, #ff0, #f0f);
-            border-radius: 50%;
-            animation: floatSparkle 4s ease-in-out forwards;
-        }
-
-        #go-home-button {
-            margin-top: 20px;
-            padding: 12px 24px;
-            background: #28a745;
-            color: white;
-            border: none;
-            font-size: 1.1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            z-index: 10000;
-        }
-
-        #go-home-button:hover {
-            background: #218838;
-        }
-
-        .timer {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #d9534f;
-            margin-top: 10px;
-        }
-
-        .option-block {
-            background: #ffffff;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            transition: 0.2s ease;
-            font-size: 0.95rem;
-        }
-
-        .option-block:hover {
-            background: #f5f5f5;
-            border-color: #ff771d;
-        }
-
-        .options input[type="radio"] {
-            transform: scale(1.2);
-            margin-right: 10px;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="quiz-container" id="quiz-container"></div>
-
-    <div id="try-again-container">
-        <button id="try-again-button">🔁 Try Again</button>
-    </div>
-
-    <div id="congrats">
-        <div id="congrats-text">🎉 Congratulations! 🎉</div>
-        <button id="go-home-button">🏠 Go to Home</button>
-        <canvas id="confetti-canvas"></canvas>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script src="JPN4.js"></script>
-    <script>
-        const quizContainer = document.getElementById('quiz-container');
-        const tryAgainContainer = document.getElementById('try-again-container');
-        const tryAgainButton = document.getElementById('try-again-button');
-        const congrats = document.getElementById('congrats');
-
-        let correctCount = 0;
-        let answeredCount = 0;
-
-        tryAgainButton.onclick = () => {
-            window.location.href = "index.html";
-        };
-
-        let shuffledQueue = [];
-
-        function getRandomQuestions(arr, num) {
-            // Fill or refill the queue if not enough questions left
-            if (shuffledQueue.length < num) {
-                const fresh = arr.slice();
-                for (let i = fresh.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [fresh[i], fresh[j]] = [fresh[j], fresh[i]];
-                }
-                shuffledQueue = shuffledQueue.concat(fresh);
-            }
-
-            // Now take next 'num' questions from the queue
-            return shuffledQueue.splice(0, num);
-        }
-
-
-        function startCardTimer(card, timerDisplay, overlay, btn) {
-            let timeLeft = 15;
-            timerDisplay.textContent = `⏳ ${timeLeft}s`;
-
-            const timerInterval = setInterval(() => {
-                if (card.classList.contains('locked') || card.classList.contains('submitted')) return;
-
-                timeLeft--;
-                timerDisplay.textContent = `⏳ ${timeLeft}s`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    if (!btn.disabled) {
-                        overlay.textContent = "⏰Time's up!";
-                        overlay.classList.add('status');
-                        tryAgainContainer.style.display = "block";
-                        btn.disabled = true;
-                        card.querySelectorAll('input').forEach(input => input.disabled = true);
-                        card.classList.add('submitted');
-                    }
-                }
-            }, 1000);
-
-            card.dataset.timerStarted = "false";
-        }
-
-        const selectedQuestions = getRandomQuestions(questions, 3);
-
-        selectedQuestions.forEach((q, index) => {
-            const card = document.createElement('div');
-            card.classList.add('card');
-            if (index !== 0) card.classList.add('locked');
-
-            const content = document.createElement('div');
-            content.classList.add('content');
-
-            const image = document.createElement('img');
-            image.src = q.image;
-
-            const questionEl = document.createElement('div');
-            questionEl.classList.add('question');
-            questionEl.textContent = `${index + 1}. ${q.question}`;
-
-            const optionsEl = document.createElement('div');
-            optionsEl.classList.add('options');
-
-            q.options.forEach(opt => {
-                const optionBlock = document.createElement('div');
-                optionBlock.classList.add('option-block');
-
-                const label = document.createElement('label');
-                const radio = document.createElement('input');
-                radio.type = 'radio';
-                radio.name = `q${index}`;
-                radio.value = opt;
-                label.appendChild(radio);
-                label.appendChild(document.createTextNode(opt));
-
-                optionBlock.appendChild(label);
-                optionsEl.appendChild(optionBlock);
-            });
-
-
-            const status = document.createElement('div'); // not used now, but kept
-
-            const timerDisplay = document.createElement('div');
-            timerDisplay.className = 'timer';
-            timerDisplay.textContent = '⏳ 10s';
-
-            const btn = document.createElement('button');
-            btn.className = 'submit-btn';
-            btn.textContent = index < 2 ? 'Submit & Unlock Next' : 'Submit & Finish';
-
-            // Overlay with question mark initially
-            const overlay = document.createElement('div');
-            overlay.className = 'lock-overlay';
-            overlay.textContent = '?';
-
-            btn.onclick = () => {
-                const selected = card.querySelector('input[type="radio"]:checked');
-                if (!selected) {
-                    alert('Select an answer');
-                    return;
-                }
-
-                answeredCount++;
-                const correct = selected.value === q.correctAnswer;
-
-                if (correct) {
-                    correctCount++;
-                    overlay.textContent = "✅Correct!";
-                    overlay.classList.add('status');
-                    if (index < 2) {
-                        quizContainer.children[index + 1].classList.remove('locked');
-                    }
-                } else {
-                    overlay.textContent = "❌Incorrect!";
-                    overlay.classList.add('status');
-                    tryAgainContainer.style.display = "block";
-                }
-
-                btn.disabled = true;
-                card.querySelectorAll('input').forEach(input => input.disabled = true);
-                card.classList.add('submitted');
-
-                overlay.classList.remove('question-mark');
-
-                if (answeredCount === 3 && correctCount === 3) {
-                    showCelebration();
-                }
-            };
-
-
-            content.appendChild(image);
-            content.appendChild(questionEl);
-            content.appendChild(optionsEl);
-            content.appendChild(timerDisplay);
-            content.appendChild(btn);
-            content.appendChild(status);
-
-            card.appendChild(content);
-            card.appendChild(overlay);
-            quizContainer.appendChild(card);
-
-            startCardTimer(card, timerDisplay, overlay, btn);
-        });
-
-        // MutationObserver to start timer on unlock
-        const observer = new MutationObserver(() => {
-            document.querySelectorAll('.card').forEach(card => {
-                if (!card.classList.contains('locked') && card.dataset.timerStarted === "false") {
-                    card.dataset.timerStarted = "true";
-                    const btn = card.querySelector('.submit-btn');
-                    const overlay = card.querySelector('.lock-overlay');
-                    const timerDisplay = card.querySelector('.timer');
-                    startCardTimer(card, timerDisplay, overlay, btn);
-                }
-            });
-        });
-
-        observer.observe(quizContainer, { attributes: true, subtree: true, attributeFilter: ['class'] });
-
-        function showCelebration() {
-            const congrats = document.getElementById("congrats");
-            congrats.style.display = "flex";
-            for (let i = 0; i < 20; i++) {
-                const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = `${Math.random() * 100}%`;
-                sparkle.style.bottom = '-50px';
-                sparkle.style.animationDelay = `${Math.random() * 2}s`;
-                sparkle.style.background = `radial-gradient(circle, ${["#ff0", "#f0f", "#0ff", "#0f0", "#f00"][Math.floor(Math.random() * 5)]}, #fff)`;
-                document.body.appendChild(sparkle);
-                setTimeout(() => sparkle.remove(), 5000);
-            }
-
-            document.getElementById("go-home-button").onclick = () => {
-                window.location.href = "index.html";
-            };
-
-            const duration = 5000;
-            const animationEnd = Date.now() + duration;
-
-            const confettiDefaults = {
-                startVelocity: 40,
-                spread: 360,
-                ticks: 100,
-                zIndex: 9999,
-                gravity: 0.5
-            };
-
-            const interval = setInterval(() => {
-                const timeLeft = animationEnd - Date.now();
-                if (timeLeft <= 0) clearInterval(interval);
-
-                confetti(Object.assign({}, confettiDefaults, {
-                    particleCount: 60,
-                    angle: 60,
-                    origin: { x: 0 },
-                    colors: ['#bb0000', '#ffffff', '#00bb00', '#0000bb']
-                }));
-
-                confetti(Object.assign({}, confettiDefaults, {
-                    particleCount: 60,
-                    angle: 120,
-                    origin: { x: 1 },
-                    colors: ['#bb00ff', '#ffdd00', '#00dddd']
-                }));
-            }, 300);
-        }
-    </script>
-</body>
-
+	<head>
+		<meta charset="UTF-8" />
+		<title>Quiz Celebration</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css"
+			integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+		<style>
+			body {
+				font-family: Arial;
+				background: #f0f0f0;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				padding: 20px;
+			}
+
+			.quiz-container {
+				display: flex;
+				gap: 20px;
+				flex-wrap: wrap;
+				justify-content: center;
+			}
+
+			.card.locked,
+			.card.submitted {
+				background: rgba(20, 20, 20, 0.8);
+				/* Dark gray with transparency */
+				box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+				/* Stronger shadow for depth */
+				border: 1px solid #444;
+				position: relative;
+			}
+
+			.card.locked .content,
+			.card.submitted .content {
+				filter: blur(6px);
+				pointer-events: none;
+				opacity: 0.5;
+			}
+
+			.card {
+				width: 400px;
+				min-height: 550px;
+				background: rgba(255, 255, 255, 0.92);
+				border-radius: 10px;
+				padding: 30px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+				position: relative;
+				overflow: hidden;
+				font-size: 1.2rem;
+			}
+
+			.card img {
+				width: 100%;
+				height: 180px;
+				object-fit: cover;
+				border-radius: 8px;
+			}
+
+			.question {
+				font-weight: bold;
+				margin: 20px 0 15px;
+				font-size: 1em;
+			}
+
+			.options label {
+				display: flex;
+				align-items: center;    
+				font-size: 1.2em;
+                padding: 12px;
+				gap: 10px;
+			}
+
+			.options input[type="radio"] {
+				transform: scale(1.5);
+				margin-right: 10px;
+			}
+
+			.submit-btn {
+				margin-top: 20px;
+				padding: 12px 24px;
+				background: #ff771d;
+				color: white;
+				border: none;
+				border-radius: 8px;
+				cursor: pointer;
+				font-size: 1rem;
+			}
+
+			/* Overlay with question mark or status text */
+			.lock-overlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+
+				/* Blur the card behind */
+				backdrop-filter: blur(6px);
+				/* ✅ This applies the blur effect */
+				background: rgba(255, 255, 255, 0.1);
+				/* Light transparent layer */
+
+				color: #ff771d;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 7rem;
+				font-weight: bold;
+				text-align: center;
+				padding: 0px;
+				transition: background 0.3s ease;
+				pointer-events: none;
+				user-select: none;
+				z-index: 10;
+			}
+
+			/* Hide overlay on unlocked cards */
+			.card:not(.locked):not(.submitted) .lock-overlay {
+				display: none;
+			}
+
+			/* Smaller text for status */
+			.lock-overlay.status {
+				font-size: 3.5rem;
+				color: white;
+				backdrop-filter: blur(6px);
+				background: rgba(0, 0, 0, 0.4);
+				padding: 0px;
+				border-radius: 15px;
+
+				/* ✅ Center content inside the card */
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				text-align: center;
+
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+			}
+
+			#try-again-container {
+				margin-top: 20px;
+				display: none;
+			}
+
+			#try-again-button {
+				padding: 10px 20px;
+				background: #ff771d;
+				color: rgb(255, 255, 255);
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 1.2rem;
+			}
+
+			#congrats {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.9);
+				z-index: 9999;
+				color: white;
+				font-size: 2rem;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+			}
+
+			#confetti-canvas {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+			}
+
+			@keyframes floatSparkle {
+				0% {
+					transform: translateY(0) rotate(0deg);
+					opacity: 1;
+				}
+
+				100% {
+					transform: translateY(-800px) rotate(720deg);
+					opacity: 0;
+				}
+			}
+
+			.sparkle {
+				position: absolute;
+				width: 10px;
+				height: 10px;
+				background: radial-gradient(circle, #ff0, #f0f);
+				border-radius: 50%;
+				animation: floatSparkle 4s ease-in-out forwards;
+			}
+
+			#go-home-button {
+				margin-top: 20px;
+				padding: 12px 24px;
+				background: #28a745;
+				color: white;
+				border: none;
+				font-size: 1.1rem;
+				border-radius: 8px;
+				cursor: pointer;
+				z-index: 10000;
+			}
+
+			#go-home-button:hover {
+				background: #218838;
+			}
+
+			.timer {
+				font-size: 1.4em;
+				font-weight: bold;
+				color: #d9534f;
+				margin-top: 10px;
+			}
+
+			.option-block {
+				background: #ffffff;
+				border: 1px solid #ccc;
+				border-radius: 6px;
+				margin-bottom: 8px;
+				transition: 0.2s ease;
+				font-size: 0.95rem;
+			}
+
+			.option-block:hover {
+				background: #f5f5f5;
+				border-color: #ff771d;
+			}
+
+			.options input[type="radio"] {
+				transform: scale(1.2);
+				margin-right: 10px;
+			}
+			#back-button {
+				position: fixed;
+				bottom: 20px;
+				right: 20px;
+				display: grid;
+				align-items: center;
+				background: #ff771d;
+				color: white;
+				border: none;
+				border-radius: 50%;
+				width: 55px;
+				height: 55px;
+				font-size: 2rem;
+				cursor: pointer;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+				transition: background 0.3s ease;
+				z-index: 10000;
+			}
+
+			#back-button:hover {
+				background: #e85f0a;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="quiz-container" id="quiz-container"></div>
+
+		<div id="try-again-container">
+			<button id="try-again-button">🔁 Try Again</button>
+		</div>
+		<button id="back-button"><i class="fa-solid fa-angle-left"></i></button>
+		<div id="congrats">
+			<div id="congrats-text">🎉 Congratulations! 🎉</div>
+			<button id="go-home-button">🏠 Go to Home</button>
+			<canvas id="confetti-canvas"></canvas>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+		<script src="JPN4.js"></script>
+		<script>
+			const quizContainer = document.getElementById("quiz-container");
+			const tryAgainContainer = document.getElementById("try-again-container");
+			const tryAgainButton = document.getElementById("try-again-button");
+			const congrats = document.getElementById("congrats");
+
+			let correctCount = 0;
+			let answeredCount = 0;
+
+			tryAgainButton.onclick = () => {
+				window.location.href = "index.html";
+			};
+
+			let shuffledQueue = [];
+
+			function getRandomQuestions(arr, num) {
+				// Fill or refill the queue if not enough questions left
+				if (shuffledQueue.length < num) {
+					const fresh = arr.slice();
+					for (let i = fresh.length - 1; i > 0; i--) {
+						const j = Math.floor(Math.random() * (i + 1));
+						[fresh[i], fresh[j]] = [fresh[j], fresh[i]];
+					}
+					shuffledQueue = shuffledQueue.concat(fresh);
+				}
+
+				// Now take next 'num' questions from the queue
+				return shuffledQueue.splice(0, num);
+			}
+
+			function startCardTimer(card, timerDisplay, overlay, btn) {
+				let timeLeft = 15;
+				timerDisplay.textContent = `⏳ ${timeLeft}s`;
+
+				const timerInterval = setInterval(() => {
+					if (
+						card.classList.contains("locked") ||
+						card.classList.contains("submitted")
+					)
+						return;
+
+					timeLeft--;
+					timerDisplay.textContent = `⏳ ${timeLeft}s`;
+
+					if (timeLeft <= 0) {
+						clearInterval(timerInterval);
+						if (!btn.disabled) {
+							overlay.textContent = "⏰Time's up!";
+							overlay.classList.add("status");
+							tryAgainContainer.style.display = "block";
+							btn.disabled = true;
+							card
+								.querySelectorAll("input")
+								.forEach((input) => (input.disabled = true));
+							card.classList.add("submitted");
+						}
+					}
+				}, 1000);
+
+				card.dataset.timerStarted = "false";
+			}
+
+			const selectedQuestions = getRandomQuestions(questions, 3);
+
+			selectedQuestions.forEach((q, index) => {
+				const card = document.createElement("div");
+				card.classList.add("card");
+				if (index !== 0) card.classList.add("locked");
+
+				const content = document.createElement("div");
+				content.classList.add("content");
+
+				const image = document.createElement("img");
+				image.src = q.image;
+
+				const questionEl = document.createElement("div");
+				questionEl.classList.add("question");
+				questionEl.textContent = `${index + 1}. ${q.question}`;
+
+				const optionsEl = document.createElement("div");
+				optionsEl.classList.add("options");
+
+				q.options.forEach((opt) => {
+					const optionBlock = document.createElement("div");
+					optionBlock.classList.add("option-block");
+
+					const label = document.createElement("label");
+					const radio = document.createElement("input");
+					radio.type = "radio";
+					radio.name = `q${index}`;
+					radio.value = opt;
+					label.appendChild(radio);
+					label.appendChild(document.createTextNode(opt));
+
+					optionBlock.appendChild(label);
+					optionsEl.appendChild(optionBlock);
+				});
+
+				const status = document.createElement("div"); // not used now, but kept
+
+				const timerDisplay = document.createElement("div");
+				timerDisplay.className = "timer";
+				timerDisplay.textContent = "⏳ 10s";
+
+				const btn = document.createElement("button");
+				btn.className = "submit-btn";
+				btn.textContent =
+					index < 2 ? "Submit & Unlock Next" : "Submit & Finish";
+
+				// Overlay with question mark initially
+				const overlay = document.createElement("div");
+				overlay.className = "lock-overlay";
+				overlay.textContent = "?";
+
+				btn.onclick = () => {
+					const selected = card.querySelector('input[type="radio"]:checked');
+					if (!selected) {
+						alert("Select an answer");
+						return;
+					}
+
+					answeredCount++;
+					const correct = selected.value === q.correctAnswer;
+
+					if (correct) {
+						correctCount++;
+						overlay.textContent = "✅Correct!";
+						overlay.classList.add("status");
+						if (index < 2) {
+							quizContainer.children[index + 1].classList.remove("locked");
+						}
+					} else {
+						overlay.textContent = "❌Incorrect!";
+						overlay.classList.add("status");
+						tryAgainContainer.style.display = "block";
+					}
+
+					btn.disabled = true;
+					card
+						.querySelectorAll("input")
+						.forEach((input) => (input.disabled = true));
+					card.classList.add("submitted");
+
+					overlay.classList.remove("question-mark");
+
+					if (answeredCount === 3 && correctCount === 3) {
+						showCelebration();
+					}
+				};
+
+				content.appendChild(image);
+				content.appendChild(questionEl);
+				content.appendChild(optionsEl);
+				content.appendChild(timerDisplay);
+				content.appendChild(btn);
+				content.appendChild(status);
+
+				card.appendChild(content);
+				card.appendChild(overlay);
+				quizContainer.appendChild(card);
+
+				startCardTimer(card, timerDisplay, overlay, btn);
+			});
+
+			// MutationObserver to start timer on unlock
+			const observer = new MutationObserver(() => {
+				document.querySelectorAll(".card").forEach((card) => {
+					if (
+						!card.classList.contains("locked") &&
+						card.dataset.timerStarted === "false"
+					) {
+						card.dataset.timerStarted = "true";
+						const btn = card.querySelector(".submit-btn");
+						const overlay = card.querySelector(".lock-overlay");
+						const timerDisplay = card.querySelector(".timer");
+						startCardTimer(card, timerDisplay, overlay, btn);
+					}
+				});
+			});
+
+			observer.observe(quizContainer, {
+				attributes: true,
+				subtree: true,
+				attributeFilter: ["class"],
+			});
+
+			function showCelebration() {
+				const congrats = document.getElementById("congrats");
+				congrats.style.display = "flex";
+				for (let i = 0; i < 20; i++) {
+					const sparkle = document.createElement("div");
+					sparkle.className = "sparkle";
+					sparkle.style.left = `${Math.random() * 100}%`;
+					sparkle.style.bottom = "-50px";
+					sparkle.style.animationDelay = `${Math.random() * 2}s`;
+					sparkle.style.background = `radial-gradient(circle, ${
+						["#ff0", "#f0f", "#0ff", "#0f0", "#f00"][
+							Math.floor(Math.random() * 5)
+						]
+					}, #fff)`;
+					document.body.appendChild(sparkle);
+					setTimeout(() => sparkle.remove(), 5000);
+				}
+
+				document.getElementById("go-home-button").onclick = () => {
+					window.location.href = "index.html";
+				};
+
+				const duration = 5000;
+				const animationEnd = Date.now() + duration;
+
+				const confettiDefaults = {
+					startVelocity: 40,
+					spread: 360,
+					ticks: 100,
+					zIndex: 9999,
+					gravity: 0.5,
+				};
+
+				const interval = setInterval(() => {
+					const timeLeft = animationEnd - Date.now();
+					if (timeLeft <= 0) clearInterval(interval);
+
+					confetti(
+						Object.assign({}, confettiDefaults, {
+							particleCount: 60,
+							angle: 60,
+							origin: { x: 0 },
+							colors: ["#bb0000", "#ffffff", "#00bb00", "#0000bb"],
+						})
+					);
+
+					confetti(
+						Object.assign({}, confettiDefaults, {
+							particleCount: 60,
+							angle: 120,
+							origin: { x: 1 },
+							colors: ["#bb00ff", "#ffdd00", "#00dddd"],
+						})
+					);
+				}, 300);
+			}
+			document.getElementById("back-button").onclick = () => {
+				window.history.back();
+			};
+		</script>
+	</body>
 </html>
