@@ -313,6 +313,23 @@
 				background-color: #d85e0c;
 				transform: scale(1.05);
 			}
+			
+			.start-btn {
+				background: linear-gradient(45deg, #2b8f2b, #4caf50);
+				color: white;
+				border: none;
+				padding: 12px 25px;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 1.1rem;
+				transition: 0.3s;
+				margin-top: 10px;
+			}
+			
+			.start-btn:hover {
+				background: linear-gradient(45deg, #247c24, #3d8b3d);
+				transform: scale(1.05);
+			}
 
 			/* Furigana styling */
 			ruby {
@@ -361,11 +378,12 @@
 			<p class="subtitle">
 				Each question has a 30-second timer. Answer before time runs out!
 			</p>
+			<button id="start-button" class="start-btn">Start Quiz <i class="fa-solid fa-play"></i></button>
 		</header>
 
 		<div class="progress-container">
 			<div class="progress-text">
-				Progress: <span id="current-question">1</span>/<span
+				Progress: <span id="current-question">0</span>/<span
 					id="total-questions"
 					>3</span
 				>
@@ -434,7 +452,7 @@
 				{
 					question:
 						"<ruby>スポーツ<rt>すぽーつ</rt></ruby> に ついて <ruby>行<rt>おこな</rt></ruby>う<ruby>大会<rt>たいかい</rt></ruby>です。それ が <ruby>世界中<rt>せかいじゅう</rt></ruby> で <ruby>行<rt>おこな</rt></ruby>われています。<ruby>四年<rt>よんねん</rt></ruby> で <ruby>一回<rt>いっかい</rt></ruby><ruby>行<rt>おこな</rt></ruby>います。2024<ruby>年<rt>ねん</rt></ruby> の <ruby>七月<rt>しちがつ</rt></ruby> に <ruby>フランス<rt>ふらんす</rt></ruby> の <ruby>パリ<rt>ぱり</rt></ruby> で <ruby>行<rt>おこな</rt></ruby>いました。それ は <ruby>何<rt>なん</rt></ruby>ですか。",
-					answer: "オリンピック",
+					answer: "オリン�ピック",
 				},
 				{
 					question:
@@ -443,7 +461,7 @@
 				},
 				{
 					question:
-						"これ は <ruby>機械<rt>きかい</rt></ruby>です。<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby> を <ruby>買<rt>か</rt></ruby>うための <ruby>機械<rt>きかい</rt></ruby>です。<ruby>日本<rt>にほん</rt></ruby> の <ruby>街<rt>まち</rt></ruby> を <ruby>歩<rt>ある</rt></ruby>くとその <ruby>機械<rt>きかい</rt></ruby> を よく<ruby>見<rt>み</rt></ruby>えます。<ruby>東京<rt>とうきょう</rt></ruby> に この<ruby>機械<rt>きかい</rt></ruby> が たくさんあります。この<ruby>機械<rt>きかい</rt></ruby> の <ruby>名前<rt>なまえ</rt></ruby> は <ruby>何<rt>なん</rt></ruby>ですか。",
+						"これ は <ruby>機械<rt>きかい</rt></ruby>です。<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby> を <ruby>買<rt>か</rt></ruby>うための <ruby>機械<rt>きかい</rt></ruby>です。<ruby>日本<rt>にほん</rt></ruby> の <ruby>街<rt>まち</rt></ruby> を <ruby>歩<rt>ある</rt></ruby>くとその <ruby>機械<rt>きかい</rt></ruby> を よく<ruby>見<rt>み</rt></ruby>えます。<ruby>東京<rt>とうきょう</rt></ruby> に この<ruby>機械<rt>きかい</rt></ruby> が たくさんあります。この<ruby>機械<rt>きかい</rt></ruby> の <ruby>名前<rt>なまえ</ruby> は <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "<ruby>自動販売機<rt>じどうはんばいき</rt></ruby>",
 				},
 				{
@@ -458,7 +476,7 @@
 				},
 				{
 					question:
-						"<ruby>夜<rt>よる</rt></ruby> に <ruby>空<rt>そら</rt></ruby> で <ruby>光<rt>ひか</rt></ruby>っている ものです。<ruby>空<rt>そら</rt></ruby> に たくさん あります。<ruby>月<rt>つき</rt></ruby> の <ruby>隣<rt>となり</rt></ruby> に あります。それ は <ruby>何<rt>なん</rt></ruby>ですか。",
+						"<ruby>夜<rt>よル</rt></ruby> に <ruby>空<rt>そら</rt></ruby> で <ruby>光<rt>ひか</rt></ruby>っている ものです。<ruby>空<rt>そら</rt></ruby> に たくさん あります。<ruby>月<rt>つき</rt></ruby> の <ruby>隣<rt>となり</rt></ruby> に あります。それ は <ruby>何<rt>なん</rt></ruby>ですか。",
 					answer: "<ruby>星<rt>ほし</rt></ruby>",
 				},
 				{
@@ -520,6 +538,7 @@
 			let timers = [];
 			const TIME_LIMIT = 30; // 30 seconds per question
 			let questions = [];
+			let quizStarted = false;
 
 			// Get 3 random questions
 			function getRandomQuestions() {
@@ -535,36 +554,30 @@
 				timers = [];
 				currentQuestionIndex = 0;
 				answeredCount = 0;
+				quizStarted = false;
 
 				// Hide next button
 				document.getElementById("next-button-container").style.display = "none";
 
 				// Update progress elements
 				document.getElementById("total-questions").textContent = totalQuestions;
-				document.getElementById("current-question").textContent = "1";
+				document.getElementById("current-question").textContent = "0";
 				document.getElementById("progress-bar").style.width = "0%";
 
 				// Create a card for each question
 				questions.forEach((question, index) => {
 					const card = document.createElement("div");
-					card.className = "card";
-					if (index > 0) card.classList.add("card-inactive");
-
+					card.className = "card card-inactive";
+					
 					card.innerHTML = `
                     <div class="card-inner">
                         <div class="card-front">
                             <div class="question-number">${index + 1}</div>
-                            <div class="timer" id="timer-${index}">${
-						index === 0 ? TIME_LIMIT : "--"
-					}</div>
+                            <div class="timer" id="timer-${index}">--</div>
                             <div class="question-text">
 								<div class="japanese-text">${question.question}</div>
 							</div>
-                            <div class="hint">${
-															index === 0
-																? "Click to reveal answer"
-																: "Complete previous question first"
-														}</div>
+                            <div class="hint">${quizStarted ? (index === 0 ? "Click to reveal answer" : "Complete previous question first") : "Click Start Quiz to begin"}</div>
                             <div class="timeup-message" id="timeup-${index}" style="display: none;">
                                 <div style="font-size: 2rem; margin-bottom: 10px;">⏰ Time's Up!</div>
                                 <div>Click to see answer</div>
@@ -583,7 +596,25 @@
 
 					quizContainer.appendChild(card);
 				});
+			}
 
+			// Start the quiz
+			function startQuiz() {
+				quizStarted = true;
+				document.getElementById("start-button").style.display = "none";
+				
+				// Update progress
+				document.getElementById("current-question").textContent = "1";
+				document.getElementById("progress-bar").style.width = "0%";
+				
+				// Activate first card
+				const firstCard = document.querySelectorAll(".card")[0];
+				firstCard.classList.remove("card-inactive");
+				
+				// Update hint
+				const hint = firstCard.querySelector(".hint");
+				hint.textContent = "Click to reveal answer";
+				
 				// Start the first timer
 				startTimer(0);
 			}
@@ -594,6 +625,11 @@
 				const timeupMessage = card.querySelector(".timeup-message");
 
 				card.addEventListener("click", () => {
+					// If quiz hasn't started, don't do anything
+					if (!quizStarted) {
+						return;
+					}
+					
 					// If card is inactive, don't do anything
 					if (card.classList.contains("card-inactive")) {
 						return;
@@ -694,7 +730,8 @@
 					}
 				};
 
-				// Initial class update
+				// Set initial time
+				timerElement.textContent = timeLeft;
 				updateTimerClass();
 
 				// Start the timer
@@ -727,6 +764,11 @@
 
 			// Initialize the quiz when page loads
 			window.onload = initializeQuiz;
+
+			// Add event listener to start button
+			document
+				.getElementById("start-button")
+				.addEventListener("click", startQuiz);
 
 			// Add event listener to next button
 			document
